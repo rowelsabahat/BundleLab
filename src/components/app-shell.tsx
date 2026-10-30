@@ -19,13 +19,13 @@ const navigation = [
     href: "/bundle-generator",
     label: "Bundle Generator",
     icon: WandSparkles,
-    planned: true,
+    planned: false,
   },
   {
     href: "/bundle-editor",
     label: "Bundle Editor",
     icon: SlidersHorizontal,
-    planned: true,
+    planned: false,
   },
   {
     href: "/listing-studio",

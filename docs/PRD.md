@@ -1,6 +1,6 @@
 # BundleLab product requirements
 
-Status: catalog milestone implemented. Overview, catalog browsing/details, and validated browser-local CSV import are shipped. Bundle workflows and AI capabilities remain planned.
+Status: catalog milestone implemented. Overview, catalog browsing/details, and validated browser-local CSV import are shipped. AI/Demo recommendations, deterministic bundle calculations, and a browser-local chosen-bundle editor are implemented. Saved-bundle library and Listing Studio remain planned.
 
 ## Problem and hypothesis
 
@@ -34,7 +34,7 @@ Milestone addition: browser-local CSV import with a downloadable sample, atomic 
 
 Shopify APIs or publishing, authentication, payments, external databases, multi-user sync, real sales analytics, medical advice, tax/shipping/payment-fee estimates, multi-currency, automated store/catalog synchronization, background jobs, and production-scale abuse prevention infrastructure.
 
-## MVP acceptance criteria (future delivery)
+## MVP acceptance criteria (partially implemented; full library/listing workflow remains planned)
 
 - A validated seed contains exactly 24 unique product IDs; every suggestion and saved line references that catalog.
 - Manual creation, calculation, editing, saving, reload, deletion, and copy workflows work without OpenAI access.
@@ -46,3 +46,7 @@ Shopify APIs or publishing, authentication, payments, external databases, multi-
 ## Evaluation plan
 
 Use scenario-based task walkthroughs and deterministic test fixtures first. Later, with real participants and consent, evaluate task completion and clarity of margin explanations. No measured outcomes exist yet.
+
+## Recommendation milestone boundaries
+
+Both modes generate one unit each of 2–5 sample products. Demo is deterministic and visibly simulated; AI Mode calls OpenAI and never falls back. Price, exact margin, category, stock, IDs, and 0–50% discount boundaries are hard checks; theme is advisory. Prompt numeric constraints use a disclosed bounded grammar and unsupported numeric wording asks for clarification. Imported products remain catalog-only until a server catalog authority exists. No-results distinguishes mathematically infeasible requests from feasible requests whose AI suggestions did not pass validation. A chosen recommendation can be edited and explicitly saved as one browser-local draft. No-key reviewers use Demo; testing AI requires an explicitly configured key/mode.

@@ -9,7 +9,6 @@ import {
   Boxes,
   Upload,
   Check,
-  Circle,
   Layers3,
 } from "lucide-react";
 import { useCatalog } from "./catalog-provider";
@@ -194,16 +193,16 @@ export function Dashboard() {
             </div>
             <ArrowUpRight size={17} />
           </button>
-          <div className="journey-row planned-row">
+          <Link href="/bundle-generator" className="journey-row">
             <span className="journey-icon light">
-              <Circle size={16} />
+              <Layers3 size={16} />
             </span>
             <div>
               <strong>Find a complementary bundle</strong>
-              <p>Coming in a future milestone.</p>
+              <p>Explore pairings with verified economics.</p>
             </div>
-            <span className="tag">Planned</span>
-          </div>
+            <ArrowUpRight size={17} />
+          </Link>
         </section>
       </div>
       <section className="collection-section">

@@ -1,10 +1,4 @@
-import { PlannedView } from "@/components/planned-view";
+import { BundleEditor } from "@/components/bundles/editor";
 export default function Page() {
-  return (
-    <PlannedView
-      title="Bundle Editor"
-      description="Shape the bundle. Understand the economics."
-      step="02 / REFINE"
-    />
-  );
+  return <BundleEditor />;
 }

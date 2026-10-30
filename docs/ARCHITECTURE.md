@@ -2,29 +2,30 @@
 
 ## Implemented milestone
 
-Next.js App Router serves `/` (Overview), `/catalog`, and three informational planned pages at `/bundle-generator`, `/bundle-editor`, and `/listing-studio`. The root layout renders `AppShell`, with a persistent `CatalogProvider`. Server route components delegate interactive views to client components. Navigation uses Next Link and pathname-based active states. Mobile navigation becomes a horizontally scrollable bar.
+Next.js App Router serves `/` (Overview), `/catalog`, and functional bundle pages at `/bundle-generator` and `/bundle-editor`. `/listing-studio` remains an informational planned page. The root layout renders `AppShell`, with a persistent `CatalogProvider`. Server route components delegate interactive views to client components. Navigation uses Next Link and pathname-based active states. Mobile navigation becomes a horizontally scrollable bar.
 
-The 24-product JSON seed is parsed with Zod at module load. `schemas.ts` owns the strict Product schema and unique-ID list validator; the client provider restores separately stored imported products after mount. Product fields are integer cents, bounded stock, USD, tags, and a local artwork variant. Zero prices are allowed by the milestone request (overriding the initial proposed positive-price rule). Cost may exceed price; show the loss rather than reject valid merchant data. `calculations.ts` currently implements only estimated item gross margin, with null for zero revenue.
+The 24-product JSON seed is parsed with Zod at module load. `schemas.ts` owns the strict Product schema and unique-ID list validator; the client provider restores separately stored imported products after mount. Product fields are integer cents, bounded stock, USD, tags, and a local artwork variant. Zero prices are allowed by the milestone request (overriding the initial proposed positive-price rule). Cost may exceed price; show the loss rather than reject valid merchant data. `calculations.ts` implements item gross margin and integer-cent bundle totals, with null margin for zero revenue. Recommendations require positive revenue.
 
 `csv.ts` implements a bounded, dependency-free quoted CSV reader and row validation. Dollar strings convert to cents by splitting whole/fraction parts. Exact required headers may be reordered. Import is append-only and atomic: invalid rows, IDs colliding with current catalog or file, or cumulative limits reject the full file. No server upload occurs.
 
-`storage.ts` validates `{version: 1, products: [...]}` under `bundlelab:imported-products:v1`, rejects corrupt/unsupported data and seed collisions. Persist before updating in-memory products; failed writes leave the catalog unchanged. Invalid stored data is retained until explicit clear, with a recovery warning and import disabled. Clear requires confirmation. Separate tabs observe updates on reload, not via live synchronization. Saved bundles are not implemented.
+`storage.ts` validates `{version: 1, products: [...]}` under `bundlelab:imported-products:v1`, rejects corrupt/unsupported data and seed collisions. Persist before updating in-memory products; failed writes leave the catalog unchanged. Invalid stored data is retained until explicit clear, with a recovery warning and import disabled. Clear requires confirmation. Separate tabs observe updates on reload, not via live synchronization. A separate versioned chosen draft is implemented; a saved-bundle library is not.
 
-Radix Dialog provides trapping, Escape dismissal, semantics, and explicit focus restoration for product details, import, and clear confirmation. Artwork is decorative CSS with deterministic palettes/silhouettes; product names remain textual and no remote images are fetched. Route boundaries and catalog restoration have loading/error states. No API routes, model client, bundling engine, or generated content exists.
+Radix Dialog provides trapping, Escape dismissal, semantics, and explicit focus restoration for product details, import, and clear confirmation. Artwork is decorative CSS with deterministic palettes/silhouettes; product names remain textual and no remote images are fetched. Route boundaries and catalog restoration have loading/error states. A server-only recommendation route and OpenAI adapter are implemented; listing generation is not.
 
-## Proposed module boundaries
+## Module boundaries (bundle library and listings remain planned)
 
 - `src/data/products.json`: immutable fictional catalog; validate on load with Zod and assert 24 unique IDs.
 - `src/lib/schemas.ts`: runtime schemas and inferred domain types; no separate competing interfaces.
 - `src/lib/catalog.ts`: validated catalog lookup and filtering.
 - `src/lib/calculations.ts`: pure synchronous TypeScript functions; independent of React, storage, and OpenAI.
 - `src/lib/storage.ts`: versioned localStorage adapter, parsing, migrations only as needed, and friendly recovery.
-- `src/lib/ai/`: server-only provider adapter, prompt construction, and response validation, added later.
+- `src/lib/server/`: server-only mode/configuration, body and rate limits, and native-fetch OpenAI Responses adapter.
+- `src/lib/recommendations/`: shared schemas, bounded prompt constraint parser, deterministic feasibility/ranking, candidate validation, and chosen-draft codec.
 - `src/components/catalog`, `bundle-builder`, `profitability`, `saved-bundles`, and `listing-editor`: feature components added when needed. Keep shared primitives in `components/ui`.
 
 Server components render static structure and catalog context. Small client components own interactive drafts, storage, and copy actions. Use React state or a reducer for the active draft; derive financial results from inputs. Avoid Redux, global stores, and a generic repository layer. Read localStorage after mount to avoid hydration mismatch; never access it at module scope. Surface quota/security errors and do not imply cross-device storage.
 
-## Schema boundaries (Product implemented; bundle and AI schemas planned)
+## Schema boundaries
 
 All objects are Zod-validated at trust boundaries; reject unknown properties for API inputs/outputs.
 
@@ -35,7 +36,7 @@ All objects are Zod-validated at trust boundaries; reject unknown properties for
 - Recommendation: title, rationale, and validated BundleLines. At most three suggestions; model does not supply prices or financial results.
 - Listing: title, description, and promotional text; enforce length limits and avoid unsupported health/performance claims.
 
-## Calculation contract (planned)
+## Calculation contract (implemented)
 
 All monetary arithmetic uses integer cents, one USD currency, and safe-integer guards. Never calculate money in an LLM response or parse formatted currency back into numbers.
 
@@ -48,15 +49,27 @@ All monetary arithmetic uses integer cents, one USD currency, and safe-integer g
 
 Format only at the UI boundary with `Intl.NumberFormat`. Label figures as estimated gross profit before shipping, tax, payment fees, overhead, and returns. Inventory availability is per bundle, not a reservation. Validate inputs before computing, with explicit errors rather than silent clamping.
 
-## Planned server routes
+## Server routes
 
-- `POST /api/recommendations`: validated goal (max 500 characters), optional known selected IDs, and bounded constraints. Build context from the canonical catalog server-side. Return `{recommendations}` only after Zod and ID/quantity/stock validation.
-- `POST /api/listings`: validated bundle lines and goal/tone; server resolves products. Return `{listing}`. Any displayed financial summary is calculated by TypeScript, outside model output.
+- `POST /api/recommendations`: strict input `{prompt, maxPriceCents, minMarginBps, category, theme}`. Price/margin use nullable bounded integer cents/basis points. Prompt and explicit controls resolve deterministically using stricter limits. Unsupported numeric phrasing is rejected. Category is hard; theme is soft. Browser-supplied catalogs and unknown fields are rejected.
+- `POST /api/listings` remains planned.
 
-Use Node runtime and server-only environment access. Add the OpenAI SDK only when implementing these routes. Request structured output, bound request size and output tokens, use a timeout, and avoid logging secrets or full prompts. Error envelope: `{error: {code, message}}`; distinguish invalid request (400), missing configuration (503), upstream failure/timeout (502/504), and invalid model response (502). No fake successful AI fallback. Preserve drafts and offer manual editing. Public unauthenticated AI endpoints need a spending/abuse decision before enabling them on a public deployment; until then keep them disabled when unconfigured.
+The dynamic generator page reads `BUNDLELAB_MODE` server-side (`demo` default, `ai` explicit; other values block generation) and passes only mode/configured booleans to the client. The route rechecks configuration for every request. `server-only` prevents provider modules from client imports. The key is never a public environment variable. Model configuration defaults to `gpt-4.1-mini`, optionally overridden with `OPENAI_MODEL`.
+
+Both modes use exactly the same 24 server-owned seed records; local CSV additions are deliberately not accepted as authoritative server product data. Enumerate every set of one unit each of 2–5 distinct in-stock products in the requested category (at most 55,430 sets). For each, binary-search discount basis points to find whether the price cap and exact margin can both be met within 0–50%. Discounts decrease revenue and cannot improve margin for nonnegative costs. A deterministic ranking retains up to three sets using keyword overlap, primary-tag diversity, preferred size, and stable-ID tie-breaking. Demo prefers a 10% discount when feasible but adjusts within the proven feasible interval. Demo returns these explicitly simulated suggestions. Theme matching is not certified.
+
+In AI Mode this search is only a feasibility preflight. If mathematically infeasible, return `status: infeasible` without a paid call. Otherwise make a real `POST https://api.openai.com/v1/responses` call with eligible IDs, canonical name/description/tags/category/price/cost, normalized constraints, and merchant prompt. No browser data, API secret, or derived financial output is supplied as model-selectable source data. Use strict JSON Schema with an eligible-ID enum, at most three candidates, IDs, advisory title/rationale, and proposed discountBps. Disable provider response storage (`store: false`), bound output tokens to 1800, timeout at 20 seconds, and do not retry automatically. Use the native Fetch API rather than another SDK dependency.
+
+Parse the provider envelope and generated JSON with Zod, handle refusal/incomplete content explicitly, reject unknown output fields and numerical/financial rationale claims, and revalidate IDs, distinct selections, stock, discount, category, price cap, and exact margin. Model prices, product names as structured fields, costs, and computed profits are never accepted. Deduplicate sets independently of order/discount. Return only validated candidates with TypeScript totals. If all model suggestions fail or the model returns none, use `status: no_valid_ai_results`, explicitly distinguishing that from proven infeasibility. Never substitute deterministic candidates after an AI failure. Partial valid results can contain fewer than three cards.
+
+Request protection: JSON only, same-origin check when Origin is present, 8 KB streamed byte limit, 3-second body timeout, 64 KB provider response limit, six attempts per IP/minute, two concurrent AI calls, thirty AI calls per instance/hour. Maps are bounded and expired entries pruned. `maxDuration: 30` on the Node route leaves room around the provider timeout. Counters are best-effort in-memory protections; cold starts, IP spoofing outside a trusted host, and multiple Vercel instances preclude a global spending guarantee. Use hosting-level protection/provider budgets for a broader public AI deployment. Error envelopes are `{error:{code,message}}` with no raw provider details or credentials; status codes distinguish 400/403/408/413/415/422/429/502/503/504. Responses are no-store. No prompt/key logging.
+
+The client displays mode explicitly, clears stale recommendations when inputs change, provides cancel/skeleton/error/no-results states, validates response shape and recomputes figures using seed records. Customization persists `{version:1,draft,constraints,source,savedAt}` at `bundlelab:chosen-bundle:v1` before navigation. Save failures keep the user on the generator. Editor restore revalidates IDs/stock and derives totals; products/quantities/name/discount are editable. Changed constraints may fail, with a visible warning rather than a false compliance label. One active draft is saved on an explicit action; a library remains planned.
+
+Official implementation references: [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [GPT-4.1 mini](https://developers.openai.com/api/docs/models/gpt-4.1-mini). No live paid API call was made during automated verification.
 
 ## Validation and deployment
 
-Vitest tests catalog validation/search, item margin, CSV ingestion, and storage codecs; Playwright exercises a production server in desktop and mobile Chromium. Future AI tests mock the provider and never require paid calls. Deploy using Vercel's standard Next.js preset, Node 24, npm install/build, and optional server environment variables. No filesystem writes or persistent server process assumptions. No custom Vercel config is currently necessary.
+Vitest tests catalog validation/search, item margin, CSV ingestion, and storage codecs; Playwright exercises a production server in desktop and mobile Chromium. AI route tests mock the external Fetch transport and never require paid calls. Playwright forces Demo Mode for deterministic browser coverage. Deploy using Vercel's standard Next.js preset, Node 24, npm install/build, and optional server environment variables. No filesystem writes or persistent server process assumptions. No custom Vercel config is currently necessary.
 
 The npm dev/build scripts explicitly use Next.js Webpack and Tailwind PostCSS for portability; see decision 009.

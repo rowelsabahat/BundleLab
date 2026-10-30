@@ -21,3 +21,7 @@ Use visible hover, active, disabled, and keyboard-focus states. Loading text exp
 ## Data and accessibility
 
 Financial values use tabular numerals, explicit currency, clear labels and assumptions; profit, margin, and discount remain distinct. Future charts must clarify an actual calculation, carry text equivalents, and use no invented sales trends. Positive/negative states always include text or icons, never color alone. Target WCAG 2.2 AA: verify contrast, semantic landmarks, one main heading, labeled inputs, logical tab order, focus trapping/restoration in dialogs, reduced-motion support, and comfortable touch targets. This is a target, not a completed accessibility audit.
+
+## Recommendation workspace
+
+The composer pairs a generous prompt field with optional numeric/category/theme controls and a preview of effective hard constraints. An always-visible mode badge distinguishes simulated Demo from real AI, including failure states. Actual pending requests show skeletons and can be cancelled; no artificial waiting. Cards lead with advisory rationale, canonical products and a transparent financial breakdown, with a clear Customize action. Show exact constraint validation separately from advisory theme matching. The editor keeps products alongside a summary on desktop and stacks on mobile. Never hide failed constraints or configuration/storage errors behind a success state.

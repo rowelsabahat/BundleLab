@@ -1,10 +1,6 @@
-import { PlannedView } from "@/components/planned-view";
+import { Generator } from "@/components/bundles/generator";
+import { aiConfigured, recommendationMode } from "@/lib/server/config";
+export const dynamic = "force-dynamic";
 export default function Page() {
-  return (
-    <PlannedView
-      title="Bundle Generator"
-      description="Discover products with a reason to belong together."
-      step="01 / DISCOVER"
-    />
-  );
+  return <Generator mode={recommendationMode()} configured={aiConfigured()} />;
 }

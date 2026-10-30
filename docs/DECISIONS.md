@@ -57,3 +57,23 @@ Accepted. Store money as integer cents; parse USD CSV decimals by string splitti
 ## 014 — Original product fallback artwork
 
 Accepted. Local CSS silhouettes and muted palettes establish a cohesive fictional botanical collection without image dependencies, licensing ambiguity, network requests, or AI generation. Art is decorative; text contains product identity and details. Imported products receive a deterministic bottle fallback. Radix primitives supply dialogs; explicit opener focus restoration covers cards and buttons outside Dialog.Trigger.
+
+## 015 — Explicit AI and deterministic Demo modes
+
+Accepted. Server-only BUNDLELAB_MODE chooses demo (default) or ai; a key alone never switches modes. Invalid configuration blocks generation. Demo is visibly simulated and deterministic. AI calls OpenAI Responses with strict structured output; every error stays in AI Mode. Use native Fetch and one small server-only guard dependency. Model defaults to gpt-4.1-mini and is configurable on the server. Automated verification mocks the external transport; no live paid request is claimed.
+
+## 016 — Bounded feasibility, exact constraints, advisory prose
+
+Accepted. Search every one-unit combination of 2–5 eligible products from the canonical 24-record seed. This bounded scope permits a truthful infeasibility proof across all allowed discounts. Both modes share integer calculations and exact margin comparisons before rounding. Model candidates select IDs and propose discounts; arbitrary fields, duplicate/unknown IDs, repeated sets and failed constraints never become accepted recommendations. Advisory titles/rationales cannot supply financial claims. Distinguish “no feasible combination” from “AI returned no valid result”. The deterministic preflight is not used as an AI fallback.
+
+## 017 — Server catalog authority and disclosed prompt grammar
+
+Accepted. Local CSV imports remain browsable but are excluded from recommendations in both modes, clearly disclosed in the UI. Sending client-owned financial records as server-authoritative catalog data would blur trust boundaries. Parse supported numeric prompt patterns deterministically, merge stricter controls, and reject unsupported numeric requirements instead of silently ignoring them. Category is hard, theme is soft; broader semantic understanding does not imply verified constraints.
+
+## 018 — Bounded API usage without new infrastructure
+
+Accepted. JSON/body size/read limits, provider response/token/time limits, cancellation, per-IP windows, concurrency limits and a per-instance hourly AI cap bound individual work. These memory-only controls reset on cold starts and are not distributed spending guarantees. Keep Demo as the default; broad public AI exposure needs provider budgets and hosting-level rules. Never log prompts/keys or return upstream error bodies. Structured-output reference: https://developers.openai.com/api/docs/guides/structured-outputs.
+
+## 019 — One chosen draft before a library
+
+Accepted. Persist the selected bundle’s IDs, quantities, proposed discount, advisory title, original constraints, source mode and timestamp before navigating. Store no authoritative totals. Revalidate and recalculate in the editor; show constraint failures after edits and explicit storage errors. A new selection replaces the one active draft. Save a draft that misses the original limits only with its visible warning; a multi-bundle library and listing generation remain separate milestones.
