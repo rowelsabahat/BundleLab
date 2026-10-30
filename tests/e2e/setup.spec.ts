@@ -52,10 +52,6 @@ test("overview, navigation, catalog search, filters, details and focus", async (
       .getByRole("link", { name: new RegExp(name) })
       .click();
     await expect(page.getByRole("heading", { level: 1 })).toContainText(name);
-    if (name === "Listing Studio")
-      await expect(
-        page.getByText("Planned milestone", { exact: true }),
-      ).toBeVisible();
   }
   expect(
     await page.evaluate(

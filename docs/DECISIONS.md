@@ -93,3 +93,19 @@ Accepted. The manual editor and picker resolve the current sample plus imported 
 ## 023 — Studio handoff before listing generation
 
 Accepted. Proceed saves the named bundle before navigating to a recalculated preview in Listing Studio. Retain explicit “generation planned” copy, no artificial AI behavior or invented listing. Preserve target warnings and a return path. The actual listing authoring workflow remains a later milestone.
+
+## 024 — Verifiable listing composition instead of unconstrained claims
+
+Accepted. AI selects grounded fact references, ordering and approved style options; TypeScript compiles the editable title, descriptions, three selling points and promo copy. Exact product descriptions/names/quantities and a bounded editorial vocabulary prevent new model-authored benefits, ingredients, certifications, financial claims or guarantees. This limits copy creativity in exchange for a verifiable boundary. Demo chooses a deterministic plan and is clearly simulated; AI still calls the model to curate emphasis and structure. Merchant edits remain editable and explicitly require review.
+
+## 025 — Shared generation transport and merchant catalog boundary
+
+Accepted. Recommendations and listings share the server-only Responses envelope, credential handling, token/response/time bounds, error classification and existing request/concurrency/hourly limits. Distinguish exhausted quota from transient rate limits. Listing generation validates only selected imported records and rejects seed overrides; imports remain merchant-provided source facts, while recommendations remain server-seed-only. Recompute/check the approved price; never pass financial fields to listing generation or accept financial model output.
+
+## 026 — Copy is a persistent draft with an explicit replacement boundary
+
+Accepted. Versioned per-bundle copy storage, autosave, stale-tab protection and a complete bundle-context fingerprint preserve edits across reloads and selection changes. Tone controls do not call AI or rewrite text. Regeneration confirms replacement and errors/cancel retain old copy. Bundle changes require review or regeneration before export. Storage failure keeps edits visible and supports export; corrupt storage is not silently overwritten, and full storage never evicts prior work without confirmation.
+
+## 027 — Exportable storefront proof, not commerce integration
+
+Accepted. Use existing local artwork and current text/price for an interactive storefront preview. Product thumbnails and copy sections work; no fake reviews, checkout or publishing. Export formatted clipboard text or JSON with approved exact-cent price/lineup and review metadata. Exclude internal product costs and secrets. This completes the portfolio MVP journey without Shopify APIs, image generation, authentication or payments.

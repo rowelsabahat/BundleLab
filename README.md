@@ -6,12 +6,12 @@ A portfolio concept for a Shopify Associate Product Manager application: AI-assi
 
 Catalog and bundle recommendation milestones implemented:
 
-- Responsive Overview, Catalog, Bundle Generator, and a full Bundle Editor with a named bundle library. Listing Studio previews the saved handoff; listing generation remains planned.
+- Responsive Overview, Catalog, Bundle Generator, and a full Bundle Editor with a named bundle library. Listing Studio completes the workflow with grounded copy composition, inline editing, a live storefront preview, clipboard copy and JSON export.
 - 24 validated fictional products, original local artwork, search, filters, sorting, details, and validated browser-local CSV import.
 - Explicit environment-selected Demo Mode (simulated, deterministic) or AI Mode (real server-side OpenAI Responses call). Never an automatic fallback.
 - Up to three distinct product sets with canonical product names and independently calculated retail total, discount, bundle price, cost, gross profit, and margin. Exact price/margin/category constraints are enforced server-side.
 - Browser-local recommendation handoff with rationale/targets, searchable product drawer, instant quantity/pricing updates, direct sale-price editing, working-draft autosave, and up to 50 named bundles with reopen/rename/duplicate/delete. Totals are recalculated on restore; warnings distinguish target misses from invalid inputs.
-- No Shopify connection, authentication, payments, database, or listing generation. No research, usage, conversion, or revenue claims.
+- No Shopify connection, authentication, payments, database, checkout, or automatic publishing. No research, usage, conversion, or revenue claims.
 
 ## Local setup
 
@@ -127,7 +127,7 @@ Product cost and retail totals multiply unit values by each quantity. Gross prof
 
 `bundlelab:saved-bundles:v1` stores one strict versioned envelope containing up to 50 named bundles, the active working draft, and a consumed-recommendation timestamp. Edits autosave the working draft; **Save bundle / Save changes** explicitly updates the named library. Library records preserve pricing mode, direct price or discount input, IDs/quantities, original targets, rationale, source and timestamps—never derived totals. Renaming, duplication, deletion, and active updates use one atomic storage write. Replacing unsaved edits and deleting a named bundle require confirmation.
 
-Legacy `bundlelab:chosen-bundle:v1` is still the Generator’s handoff channel. It is consumed once per selection; deleting an active named bundle does not resurrect that recommendation on reload. **Proceed to Listing Studio** saves the named bundle before navigation; the Studio shows a recalculated preview and explicitly says generation is not implemented. If storage fails, no successful save/handoff is claimed. Reads reject corrupt/unknown schemas without overwriting data. Stale-tab writes are refused; reload to pick up other-tab changes. Missing imported products retain their IDs and are repairable rather than replaced with invented prices.
+Legacy `bundlelab:chosen-bundle:v1` is still the Generator’s handoff channel. It is consumed once per selection; deleting an active named bundle does not resurrect that recommendation on reload. **Proceed to Listing Studio** saves the named bundle before navigation; the Studio restores this selection and recalculates its exact price before generating or exporting copy. If storage fails, no successful save/handoff is claimed. Reads reject corrupt/unknown schemas without overwriting data. Stale-tab writes are refused; reload to pick up other-tab changes. Missing imported products retain their IDs and are repairable rather than replaced with invented prices.
 
 Browser storage is local, not cross-device sync or a backup. A corrupted library has an explicit destructive reset; this clears bundles/working draft, not catalog imports. While a numeric input is incomplete, that raw text is tab-local; the last valid working model is what can restore after reload.
 
@@ -138,11 +138,41 @@ Browser storage is local, not cross-device sync or a backup. A corrupted library
 3. Enter a direct final price of **$60.01**. Add Everyday Barrier Cream using the drawer: the price stays **$60.01** and effective discount changes. Enter **10%** again: the sale price becomes **$93.60**. Remove the cream: price returns to **$59.40**.
 4. Try a negative price, 51% discount, and invalid quantity; check that errors are visible and Save is disabled. Remove all products: zero totals and undefined margin/discount appear, with a helpful empty state.
 5. Save a valid pair. Duplicate it, rename the copy, reopen it, and reload. Both named bundles should remain independent. Delete one with confirmation and verify the other remains.
-6. Open a recommendation with its original targets. Raise price above the cap or lower margin below target and inspect distinct warnings. **Proceed to Listing Studio** should save and show the same products and pricing, with generation clearly marked planned.
+6. Open a recommendation with its original targets. Raise price above the cap or lower margin below target and inspect distinct warnings. **Proceed to Listing Studio** should save and show the same products and pricing, then let you generate/edit copy.
 7. Repeat at 375px width and using keyboard only. The drawer supports Escape, traps focus and returns focus to its opener. Test import-backed products, browser-storage denial, and an unavailable imported product if desired.
 
-## Next step
+## Listing Studio
 
-Implement Listing Studio draft generation and editing. Extend recommendations to imported catalogs only after defining a server-side source of truth. Broader natural-language constraint parsing and distributed abuse controls remain future work.
+The selected, named saved bundle is loaded from the editor; an unsaved working draft must be saved first. Product IDs, quantities, catalog facts, and TypeScript pricing remain separate from editable marketing text. The Studio includes product title, short description, detailed description, exactly three selling points, and short promotional copy. Every field edits inline and updates the storefront preview immediately. Product thumbnails switch the preview artwork and the detailed-description section expands/collapses. The preview is explicitly not a live shop: no cart, checkout, fabricated reviews, shipping promises, or publishing actions.
+
+### Grounded AI and Demo behavior
+
+Professional, Playful, and Minimal control the composition style. Changing tone does not make an API call or rewrite existing edits. Generate explicitly; regeneration asks before replacing all fields, and failure/cancellation leaves existing copy in place. Demo produces a clearly labeled deterministic template. AI Mode makes a real OpenAI call through `POST /api/listings`; it never substitutes Demo output on failure.
+
+To prevent unsupported claims rather than merely prompt against them, AI returns a **composition plan**: approved style choices and references to selected catalog facts. The server compiles the plan into editable fields using exact descriptions, canonical names, quantities, and a small approved tone-specific vocabulary. AI chooses emphasis/order/style; it does not free-write unverified benefits. This intentionally limits creative phrasing. All selected products must be covered, selling-point facts must be distinct, and unsupported references, fields, or omissions are rejected. No prices, costs, discounts, certifications or guarantees can be invented as new model-supplied facts. Imported descriptions remain merchant-provided source data, not independently verified truth.
+
+Listing generation accepts only the selected imported records (up to five), validates them with the existing Product schema, and never lets them override canonical seed IDs. This enables manual imported bundles to finish the workflow while server recommendations remain seed-only. The server recomputes final price and checks it against the expected approved price. Product facts/quantities and tone are supplied to the model; financial figures and the API key are not part of its input.
+
+The shared server-only Responses transport handles strict JSON output, refusal/incomplete responses, timeouts, credentials, temporary rate limits, and exhausted credits/quota. Listing output is bounded to 900 tokens and 64 KB; requests to 20 KB and a 3-second body read, with the existing 20-second provider timeout. The per-IP request, concurrency and hourly AI allowances are shared with recommendations. There are no automatic retries or background generation calls. Automated AI tests mock the transport; no paid call was required for this milestone.
+
+### Copy persistence and exports
+
+`bundlelab:listings:v1` stores up to 50 versioned copy documents (2 MB guard), keyed by bundle UUID, independently of the bundle library. Each tracks source mode, applied/requested tone, merchant-edit flag, updated timestamp and a fingerprint of bundle inputs/catalog facts. Edits autosave; storage failures keep them in this tab with an explicit warning and export available. Corrupt records are not silently overwritten. A confirmed reset clears other saved listing drafts while retaining the current on-screen copy. A full store rejects the write rather than evicting old edits.
+
+Reopening a bundle restores its copy. If its products, quantities, pricing or catalog facts have changed, previous copy remains visible and copy/export is blocked until you explicitly review it for the updated bundle or regenerate. Changing the selection in another tab is also checked before generation/export. Stale-tab listing writes are refused. Merchant-edited copy is not automatically fact-checked, so review all edits before use.
+
+**Copy formatted text** writes the visible listing, deterministic price and included products, reporting success only after the clipboard write completes. A denied/unavailable clipboard shows an error and JSON remains available. **Export JSON** downloads a standalone document containing all fields, product IDs/names/quantities/unit retail, exact final price/currency, source/tone, and review metadata; it excludes internal costs, API keys and profit estimates. All required fields must be nonblank. Exports are draft artifacts, not published listings.
+
+## Demo the complete workflow
+
+1. Set `BUNDLELAB_MODE=demo` in `.env.local` and run/restart `npm run dev`. No API credits or key are required. Confirm the visible **Demo Mode · Simulated** labels.
+2. **Catalog:** search or filter the 24 fictional products; inspect a product’s retail, cost and estimated margin.
+3. **Bundle Generator:** submit “Create a skincare starter kit under $80 with at least a 35% gross margin.” Inspect the simulated pairings and calculated figures, then **Customize this bundle**.
+4. **Bundle Editor:** change products or quantities, try discount/direct-price editing, name and save the bundle, then **Proceed to Listing Studio**.
+5. **Listing Studio:** choose Professional, Playful or Minimal and **Generate demo copy**. Compare the read-only lineup/price to the editor. Edit every field and see the preview update. Switch product thumbnails and expand/collapse the detailed copy.
+6. Switch tone: existing copy stays. Regenerate, first choose **Keep my edits**, then try confirmed replacement. Reload to verify persistence.
+7. **Copy formatted text**, paste into a text editor, and **Export JSON** to inspect the downloaded exact-cent price and products. Return to Editor, change/save the price, and confirm the Studio preserves old copy but asks you to review or regenerate it.
+
+For real AI, explicitly set `BUNDLELAB_MODE=ai` plus a funded API key and restart. Confirm **AI Mode · OpenAI** in both Generator and Studio. No mode switches silently. Future work: richer vetted editorial styles, broader source verification and stronger deployment-wide abuse controls. Shopify integration and automatic publishing remain outside this MVP.
 
 The npm dev/build scripts explicitly use Next.js Webpack and Tailwind PostCSS for portability; see decision 009. No deployment is created by this implementation step.

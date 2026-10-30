@@ -234,9 +234,9 @@ export function EditorSummary({
         <ArrowRight size={15} />
       </Button>
       <p className="assumption">
-        Proceeding saves this named bundle. Listing generation is a future
-        milestone. All estimates exclude taxes, shipping, transaction fees, and
-        other operating costs.
+        Proceeding saves this named bundle. Listing Studio preserves your lineup
+        and approved price while you prepare editable copy. All estimates
+        exclude taxes, shipping, transaction fees, and other operating costs.
       </p>
     </aside>
   );

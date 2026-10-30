@@ -1,6 +1,6 @@
 # BundleLab product requirements
 
-Status: catalog milestone implemented. Overview, catalog browsing/details, and validated browser-local CSV import are shipped. AI/Demo recommendations, deterministic bundle calculations, and a browser-local chosen-bundle editor are implemented. The full editor and saved-bundle library are implemented. Listing Studio shows the saved handoff; generation remains planned.
+Status: catalog milestone implemented. Overview, catalog browsing/details, and validated browser-local CSV import are shipped. AI/Demo recommendations, deterministic bundle calculations, and a browser-local chosen-bundle editor are implemented. The full editor and saved-bundle library are implemented. Listing Studio generates grounded editable copy in AI or explicit Demo Mode, previews it and exports JSON/formatted text.
 
 ## Problem and hypothesis
 
@@ -34,7 +34,7 @@ Milestone addition: browser-local CSV import with a downloadable sample, atomic 
 
 Shopify APIs or publishing, authentication, payments, external databases, multi-user sync, real sales analytics, medical advice, tax/shipping/payment-fee estimates, multi-currency, automated store/catalog synchronization, background jobs, and production-scale abuse prevention infrastructure.
 
-## MVP acceptance criteria (partially implemented; listing generation/copy workflow remains planned)
+## MVP acceptance criteria
 
 - A validated seed contains exactly 24 unique product IDs; every suggestion and saved line references that catalog.
 - Manual creation, calculation, editing, saving, reload, deletion, and copy workflows work without OpenAI access.
@@ -58,4 +58,13 @@ Both modes generate one unit each of 2–5 sample products. Demo is deterministi
 - The last-edited pricing field controls the draft: discount percentage follows retail changes, while direct price remains fixed to cents. Invalid fields hide totals and disable saves. No price is silently clamped.
 - Named bundles can be saved, reopened, renamed, duplicated and deleted; working autosave is separate from named saves. Stale-tab updates and storage failures do not fabricate save success.
 - Zero revenue/retail have undefined ratios. Original target misses and negative profit are disclosed. Direct prices must respect the cent-rounded 0–50% discount range before saving.
-- A searchable/filterable drawer works on desktop/mobile with keyboard focus management. Listing Studio accepts a saved bundle preview without simulating listing generation.
+- A searchable/filterable drawer works on desktop/mobile with keyboard focus management. Listing Studio restores the saved bundle and preserves its lineup/pricing while composing editable copy.
+
+## Listing Studio milestone acceptance (implemented)
+
+- Restore the currently selected named bundle; show canonical products, quantities and recalculated exact sale price. Require a valid saved handoff.
+- Provide explicit Professional, Playful and Minimal tones. AI curates a bounded plan referencing catalog facts and approved style options; a deterministic compiler creates a title, short/detailed descriptions, three selling points and short promotional copy. This conservative approach limits creative prose to prevent invented product claims. Demo uses the same fact/compiler boundary with an explicitly simulated deterministic plan.
+- Generate only on request. Tone changes never silently overwrite copy. Confirm regeneration, preserve old edits on error/cancel, and never fall back from AI to Demo.
+- All fields edit inline, update a realistic non-commerce storefront preview, and autosave per bundle with honest storage failures. Restored copy needs explicit review after bundle context changes.
+- Copy formatted text and download a JSON artifact with exact price and lineup, excluding internal costs and secrets. Empty required fields or unreviewed context changes block export. Merchant edits require human review; they are not presented as automatically verified claims.
+- Imported selected product records are schema-validated merchant catalog input and cannot override canonical seed records. No images are generated, no checkout exists, and no listing is published automatically.

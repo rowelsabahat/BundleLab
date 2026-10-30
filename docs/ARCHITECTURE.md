@@ -2,7 +2,7 @@
 
 ## Implemented milestone
 
-Next.js App Router serves `/` (Overview), `/catalog`, and functional bundle pages at `/bundle-generator` and `/bundle-editor`. `/listing-studio` previews the saved editor handoff; generation remains planned. The root layout renders `AppShell`, with a persistent `CatalogProvider`. Server route components delegate interactive views to client components. Navigation uses Next Link and pathname-based active states. Mobile navigation becomes a horizontally scrollable bar.
+Next.js App Router serves `/` (Overview), `/catalog`, and functional bundle pages at `/bundle-generator` and `/bundle-editor`. `/listing-studio` completes the saved-bundle handoff, copy generation/editing, storefront preview, and exports. The root layout renders `AppShell`, with a persistent `CatalogProvider`. Server route components delegate interactive views to client components. Navigation uses Next Link and pathname-based active states. Mobile navigation becomes a horizontally scrollable bar.
 
 The 24-product JSON seed is parsed with Zod at module load. `schemas.ts` owns the strict Product schema and unique-ID list validator; the client provider restores separately stored imported products after mount. Product fields are integer cents, bounded stock, USD, tags, and a local artwork variant. Zero prices are allowed by the milestone request (overriding the initial proposed positive-price rule). Cost may exceed price; show the loss rather than reject valid merchant data. `calculations.ts` implements item gross margin and integer-cent bundle totals, with null margin for zero revenue. Recommendations require positive revenue.
 
@@ -10,9 +10,9 @@ The 24-product JSON seed is parsed with Zod at module load. `schemas.ts` owns th
 
 `storage.ts` validates `{version: 1, products: [...]}` under `bundlelab:imported-products:v1`, rejects corrupt/unsupported data and seed collisions. Persist before updating in-memory products; failed writes leave the catalog unchanged. Invalid stored data is retained until explicit clear, with a recovery warning and import disabled. Clear requires confirmation. Separate tabs observe updates on reload, not via live synchronization. A separate recommendation handoff and an atomic working-draft/named-bundle envelope are implemented.
 
-Radix Dialog provides trapping, Escape dismissal, semantics, and explicit focus restoration for product details, import, and clear confirmation. Artwork is decorative CSS with deterministic palettes/silhouettes; product names remain textual and no remote images are fetched. Route boundaries and catalog restoration have loading/error states. A server-only recommendation route and OpenAI adapter are implemented; listing generation is not.
+Radix Dialog provides trapping, Escape dismissal, semantics, and explicit focus restoration for product details, import, and clear confirmation. Artwork is decorative CSS with deterministic palettes/silhouettes; product names remain textual and no remote images are fetched. Route boundaries and catalog restoration have loading/error states. Server-only recommendation/listing routes share a bounded OpenAI Responses transport.
 
-## Module boundaries (listing generation remains planned)
+## Module boundaries
 
 - `src/data/products.json`: immutable fictional catalog; validate on load with Zod and assert 24 unique IDs.
 - `src/lib/schemas.ts`: runtime schemas and inferred domain types; no separate competing interfaces.
@@ -22,7 +22,9 @@ Radix Dialog provides trapping, Escape dismissal, semantics, and explicit focus 
 - `src/lib/server/`: server-only mode/configuration, body and rate limits, and native-fetch OpenAI Responses adapter.
 - `src/lib/recommendations/`: shared schemas, bounded prompt constraint parser, deterministic feasibility/ranking, candidate validation, and chosen-draft codec.
 - `src/lib/editor/`: editor pricing model, strict working/named schemas, migration, library operations, and optimistic stale-tab write protection.
-- `src/components/bundles/`: Generator, full editor, economics summary, drawer, named library and Listing Studio handoff. Keep shared primitives in `components/ui`.
+- `src/components/bundles/`: Generator, full editor, economics summary, drawer and named library.
+- `src/lib/listings/`: listing schemas, verified fact composition, context/export and copy persistence.
+- `src/components/listings/`: Listing Studio editor and interactive storefront preview. Keep shared primitives in `components/ui`.
 
 Server components render static structure and catalog context. Small client components own interactive drafts, storage, and copy actions. Use React state or a reducer for the active draft; derive financial results from inputs. Avoid Redux, global stores, and a generic repository layer. Read localStorage after mount to avoid hydration mismatch; never access it at module scope. Surface quota/security errors and do not imply cross-device storage.
 
@@ -54,7 +56,7 @@ Format only at the UI boundary with `Intl.NumberFormat`. Label figures as estima
 ## Server routes
 
 - `POST /api/recommendations`: strict input `{prompt, maxPriceCents, minMarginBps, category, theme}`. Price/margin use nullable bounded integer cents/basis points. Prompt and explicit controls resolve deterministically using stricter limits. Unsupported numeric phrasing is rejected. Category is hard; theme is soft. Browser-supplied catalogs and unknown fields are rejected.
-- `POST /api/listings` remains planned.
+- `POST /api/listings`: strict saved draft, tone, expected price and only selected imported records; recomputes figures and returns grounded copy with provenance, not model financial data.
 
 The dynamic generator page reads `BUNDLELAB_MODE` server-side (`demo` default, `ai` explicit; other values block generation) and passes only mode/configured booleans to the client. The route rechecks configuration for every request. `server-only` prevents provider modules from client imports. The key is never a public environment variable. Model configuration defaults to `gpt-4.1-mini`, optionally overridden with `OPENAI_MODEL`.
 
@@ -80,9 +82,25 @@ The library codec uses strict Zod schemas, a 1 MB input guard, and at most 50 na
 
 Working model changes autosave to `active`; explicit Save copies them to the named entry identified by UUID (or inserts a new entry). Rename, duplicate, delete, and active selection updates are pure library operations followed by one atomic `setItem`. A raw-envelope comparison rejects stale-tab writes instead of overwriting another tab. Library mutations update UI only after a successful write; a failed working autosave retains edits in this tab with a visible warning. Corrupt libraries are not overwritten; an explicit confirmed reset can clear them. Replacing unsaved named edits and deleting a record require a dialog. No distributed synchronization or browser-storage durability is claimed.
 
-Proceed to Listing Studio performs a validated named save before navigation. The Studio restores the active record only if it matches a named saved bundle and recalculates a preview. It makes no generation call, fabricates no listing copy, and preserves a clear return path to the editor. Listing generation remains future scope.
+Proceed to Listing Studio performs a validated named save before navigation. The Studio restores the active record only if it matches a named saved bundle and recalculates a preview. Listing Studio retains this saved-bundle validation before any copy generation, editing, export or return to Editor.
 
 Official implementation references: [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [GPT-4.1 mini](https://developers.openai.com/api/docs/models/gpt-4.1-mini). No live paid API call was made during automated verification.
+
+## Listing Studio generation and persistence
+
+The dynamic Studio page passes only server-selected mode/configured flags to the client. Selected bundle must match a named saved entry; current stock, references and pricing are validated using the existing editor model. Its exact price and lineup are read-only to copy generation. An expectedPriceCents mismatch returns 409. Selected imported records are accepted as bounded schema-validated merchant catalog input, not model-generated source data; reject seed overrides, unrelated records and duplicate/missing IDs. AI recommendations remain seed-only.
+
+`catalogFacts` builds stable name/quantity, description and contents fact IDs. `generateListingPlan` sends only these facts and the requested tone to the real OpenAI Responses transport—no prices, costs or discount fields. The strict output schema allows title/lead/promotion style enums and fact-reference lists only. `compileCopy` rejects unsupported facts, duplicate points, missing product coverage and unexpected fields. It composes the required fields from exact source text and approved editorial phrases; no new product benefits, ingredients, certifications, guarantees or discount claims can enter through free-form model prose. This is deliberately conservative AI curation rather than unconstrained copywriting. Imported descriptions are merchant-provided, not independently certified facts. The user can edit all fields afterward, with an explicit review notice.
+
+`openai-transport.ts` is the common server-only credential/Responses/JSON-envelope boundary; recommendation and listing adapters supply their schemas and task instructions. It bounds response bytes to 64 KB, handles refusal/incomplete output and sanitized authentication/quota/rate/network errors, and never logs raw prompts/keys/provider bodies. Listing requests use a 20 KB streamed body bound and the existing 3-second read timeout; the provider uses 900 output tokens and a 20-second timeout. Same-origin, six-per-IP/minute, two concurrent AI calls and thirty-per-instance/hour limits are shared across both generation routes. No automatic retry or background/tone-triggered call occurs. AI errors never substitute Demo; Demo plans compile through the same fact boundary and are clearly labeled simulated.
+
+Copy schema: title max 120, short description 400, detailed description 6500, exactly three selling points up to 1200 each, promotional copy 350. Editing permits empty fields temporarily; generation and export require complete nonblank fields. Text renders as React text, not HTML. Financial data is outside these editable fields and never updated from model output.
+
+`bundlelab:listings:v1` is a strict `{version:1,documents:[...]}` envelope (50 UUID-keyed documents, 2 MB guard). Each stores copy, bundle context fingerprint, original source, merchant-edit flag, applied/requested tone and timestamp. Input edits write immediately while failed writes retain current in-memory copy with a warning. A raw-envelope comparison rejects stale-tab writes; invalid storage is not overwritten. An explicit confirmed reset retains current on-screen copy while removing other saved copies. No silent eviction occurs when full.
+
+Context fingerprint includes bundle inputs plus selected catalog facts/quantities and recalculated sale price. Changed context never silently replaces prior copy: show a review warning and disable copy/export until acknowledged or regenerated. The latest active named bundle is checked again before generation/export, preventing a stale selected bundle from being presented as current. Tone controls preserve old text until explicit confirmed generation. Errors and cancellation preserve all previous copy. Per-bundle restoration supports navigation/reloads.
+
+The live preview uses existing local ProductArt assets, product-specific thumbnails, all text fields and exact price. It has no fake reviews, cart/checkout or shipping guarantees. Clipboard reports success only after the browser resolves the write, with a clear denied/unavailable state. JSON is generated as a client Blob from current validated copy/context and includes product IDs/names/quantities/unit retail, exact price/currency and draft-review metadata; costs/profit/secrets are excluded. These exports are not Shopify publishing.
 
 ## Validation and deployment
 

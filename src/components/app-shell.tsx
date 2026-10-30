@@ -31,7 +31,7 @@ const navigation = [
     href: "/listing-studio",
     label: "Listing Studio",
     icon: FileText,
-    planned: true,
+    planned: false,
   },
 ];
 export function AppShell({ children }: { children: React.ReactNode }) {

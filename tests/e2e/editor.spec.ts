@@ -150,10 +150,8 @@ test("editor synchronizes pricing, drawer selection, named library actions and l
     main.getByRole("heading", { name: "Evening pair", exact: true }),
   ).toBeVisible();
   await expect(
-    main.getByText("Listing generation is not available in this milestone.", {
-      exact: false,
-    }),
-  ).toBeVisible();
+    main.getByRole("button", { name: "Generate demo copy", exact: true }),
+  ).toBeEnabled();
   await main
     .getByRole("link", { name: "Back to Bundle Editor", exact: true })
     .click();
