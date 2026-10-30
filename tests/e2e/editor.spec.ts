@@ -309,3 +309,31 @@ test("manual editor uses imported catalog products and preserves zero-money trut
     main.locator(".editor-finances .margin-highlight dd"),
   ).toHaveText("Not defined");
 });
+
+test("deleting another saved bundle preserves incomplete active price edits", async ({
+  page,
+}) => {
+  await openChosen(page);
+  const main = page.getByRole("main");
+  await main.getByRole("button", { name: "Save bundle", exact: true }).click();
+  await main
+    .getByRole("button", { name: "Duplicate Starter ritual", exact: true })
+    .click();
+  const price = main.getByLabel("Final bundle price", { exact: true });
+  await price.fill("");
+  await main
+    .getByRole("button", { name: "Delete Starter ritual copy", exact: true })
+    .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Delete bundle", exact: true })
+    .click();
+  await expect(price).toHaveValue("");
+  await expect(
+    main.getByRole("button", { name: "Save changes", exact: true }),
+  ).toBeDisabled();
+  await expect(main.locator(".editor-finances")).toHaveCount(0);
+  await expect(main.getByLabel("Bundle name", { exact: true })).toHaveValue(
+    "Starter ritual",
+  );
+});

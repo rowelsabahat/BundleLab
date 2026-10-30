@@ -3,6 +3,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -10,7 +11,7 @@ import { seedProducts } from "@/lib/catalog";
 import {
   CATALOG_STORAGE_KEY,
   decodeImportedCatalog,
-  encodeImportedCatalog,
+  persistImportedCatalog,
 } from "@/lib/storage";
 import { productListSchema, type Product } from "@/lib/schemas";
 
@@ -27,14 +28,12 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
   const [imported, setImported] = useState<Product[]>([]);
   const [ready, setReady] = useState(false);
   const [storageError, setStorageError] = useState("");
+  const expectedRaw = useRef<string | null>(null);
   useEffect(() => {
     // Hydrate external browser storage only after mount; SSR always renders the seed catalog.
     try {
-      const restored = decodeImportedCatalog(
-        localStorage.getItem(CATALOG_STORAGE_KEY),
-        seedProducts,
-      );
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- Synchronizing external persistent storage after hydration.
+      expectedRaw.current = localStorage.getItem(CATALOG_STORAGE_KEY);
+      const restored = decodeImportedCatalog(expectedRaw.current, seedProducts);
       setImported(restored);
     } catch {
       setStorageError(
@@ -50,20 +49,32 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
         return "Resolve the saved catalog warning before importing.";
       productListSchema.parse([...products, ...incoming]);
       const next = [...imported, ...incoming];
-      localStorage.setItem(CATALOG_STORAGE_KEY, encodeImportedCatalog(next));
+      expectedRaw.current = persistImportedCatalog(
+        localStorage,
+        next,
+        expectedRaw.current,
+      );
       setImported(next);
       return null;
-    } catch {
+    } catch (failure) {
+      if (failure instanceof Error && failure.message.startsWith("Another tab"))
+        return failure.message;
       return "Import was not saved. Browser storage may be blocked or full. No products were added.";
     }
   }
   function clearImports() {
     try {
-      localStorage.removeItem(CATALOG_STORAGE_KEY);
+      expectedRaw.current = persistImportedCatalog(
+        localStorage,
+        null,
+        expectedRaw.current,
+      );
       setImported([]);
       setStorageError("");
       return null;
-    } catch {
+    } catch (failure) {
+      if (failure instanceof Error && failure.message.startsWith("Another tab"))
+        return failure.message;
       return "Cannot clear saved imports. Allow browser storage and try again.";
     }
   }

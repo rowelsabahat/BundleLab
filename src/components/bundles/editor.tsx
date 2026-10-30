@@ -701,7 +701,7 @@ export function BundleEditor() {
             variant="destructive"
             onClick={() => {
               if (deleting && commit(deleteBundle(library, deleting.id))) {
-                clearInputs();
+                if (deleting.id === active?.id) clearInputs();
                 setDeleting(null);
                 setNotice("Bundle deleted.");
               } else

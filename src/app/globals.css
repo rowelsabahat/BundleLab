@@ -4505,3 +4505,37 @@
     animation: none;
   }
 }
+
+/* Supporting text must remain readable on the warm workspace and white cards. */
+.assumption,
+.results-count,
+.product-description,
+.unit-cost,
+.product-margin > span,
+.product-card-heading > span,
+.product-tags > span,
+.category-tabs span,
+.composer-footnote,
+.constraint-fields label > span,
+.constraint-heading > span:last-child,
+.constraint-note,
+.pricing-mode-note,
+.rounding-note,
+.original-rationale > span,
+.editor-products-footer,
+.full-editor-lines li > div > span,
+.picker-cost,
+.picker-status,
+.picker-footer p,
+.listing-strip-name > span,
+.listing-approved-price > span,
+.listing-generate-row > span,
+.listing-tone p,
+.listing-tone > p,
+.listing-tone button span,
+.listing-fields label > span:not(.selling-point-number),
+.listing-review-note,
+.preview-heading > span:last-child,
+.preview-commerce-note {
+  color: var(--muted-foreground);
+}

@@ -23,3 +23,18 @@ export function decodeImportedCatalog(
 export function encodeImportedCatalog(products: Product[]) {
   return JSON.stringify(storedCatalogSchema.parse({ version: 1, products }));
 }
+/** Refuse stale-tab writes, including clears, instead of losing unseen imports. */
+export function persistImportedCatalog(
+  storage: Pick<Storage, "getItem" | "setItem" | "removeItem">,
+  products: Product[] | null,
+  expectedRaw: string | null,
+) {
+  if (storage.getItem(CATALOG_STORAGE_KEY) !== expectedRaw)
+    throw new Error(
+      "Another tab changed the catalog. Reload before importing or clearing products so those changes are not overwritten.",
+    );
+  const raw = products === null ? null : encodeImportedCatalog(products);
+  if (raw === null) storage.removeItem(CATALOG_STORAGE_KEY);
+  else storage.setItem(CATALOG_STORAGE_KEY, raw);
+  return raw;
+}

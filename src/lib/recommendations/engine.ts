@@ -3,11 +3,52 @@ import { totalsFromAmounts } from "../calculations";
 import {
   bundleDraftSchema,
   generatedBundleSchema,
+  recommendationResponseSchema,
+  constraintsSchema,
   type BundleDraft,
   type Constraints,
   type GeneratedBundle,
   type Recommendation,
 } from "./schemas";
+
+/** Recheck the response against the submitted guardrails before showing a pass label. */
+export function verifyRecommendationResponse(
+  raw: unknown,
+  catalog: Product[],
+  expected: Constraints,
+) {
+  const response = recommendationResponseSchema.parse(raw);
+  if (
+    JSON.stringify(response.constraints) !==
+      JSON.stringify(constraintsSchema.parse(expected)) ||
+    (response.status === "ok") !== response.recommendations.length > 0 ||
+    (response.mode === "demo" && response.status === "no_valid_ai_results")
+  )
+    throw new Error("The response does not match the requested constraints.");
+  const seen = new Set<string>();
+  const eligible = eligibleProducts(catalog, expected);
+  const recommendations = response.recommendations.map((recommendation) => {
+    const key = recommendation.lines
+      .map((line) => line.productId)
+      .sort()
+      .join("|");
+    if (
+      seen.has(key) ||
+      recommendation.lines.some((line) => line.quantity !== 1)
+    )
+      throw new Error(
+        "The response contains repeated sets or unsupported quantities.",
+      );
+    seen.add(key);
+    const totals = calculateBundle(recommendation, eligible);
+    if (!satisfies(totals, expected))
+      throw new Error(
+        "The response failed the requested price or margin constraints.",
+      );
+    return { ...recommendation, totals };
+  });
+  return { ...response, recommendations };
+}
 
 export function calculateBundle(raw: BundleDraft, catalog: Product[]) {
   // Derived fields on a recommendation are deliberately discarded before calculation.

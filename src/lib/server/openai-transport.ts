@@ -96,6 +96,8 @@ export async function requestStructuredOutput(
       } catch {
         /* Only allowlisted classifications are returned; never echo provider details. */
       }
+      // An aborted error-body read is a timeout/cancellation, not an HTTP retry hint.
+      signal.throwIfAborted();
       if (response.status === 429) {
         if (
           type === "insufficient_quota" ||

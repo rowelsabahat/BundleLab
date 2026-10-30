@@ -38,10 +38,11 @@ export async function POST(request: Request) {
         403,
       );
     if (
-      !request.headers
+      request.headers
         .get("content-type")
-        ?.toLowerCase()
-        .startsWith("application/json")
+        ?.split(";")[0]
+        .trim()
+        .toLowerCase() !== "application/json"
     )
       throw new RequestError(
         "INVALID_INPUT",

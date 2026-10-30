@@ -159,3 +159,79 @@ test("blocked writes do not report successful imports", async ({ page }) => {
   await page.getByRole("button", { name: "Close", exact: true }).click();
   await expect(page.getByRole("button", { name: /^View / })).toHaveCount(24);
 });
+
+test("a stale catalog tab cannot overwrite newer imports", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/catalog");
+  await expect(page.getByText("0 imported", { exact: true })).toBeVisible();
+  const other = await context.newPage();
+  await other.goto("/catalog");
+  await other
+    .getByRole("button", { name: "Import products", exact: true })
+    .click();
+  await other.getByLabel("Choose product CSV").setInputFiles({
+    name: "first.csv",
+    mimeType: "text/csv",
+    buffer: Buffer.from(sample),
+  });
+  await expect(
+    other.getByRole("status").filter({ hasText: "1 product imported" }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Import products", exact: true })
+    .click();
+  await page.getByLabel("Choose product CSV").setInputFiles({
+    name: "second.csv",
+    mimeType: "text/csv",
+    buffer: Buffer.from(sample.replaceAll("CUSTOM-1", "CUSTOM-2")),
+  });
+  await expect(page.getByRole("alert")).toContainText(
+    "Another tab changed the catalog",
+  );
+  await page.reload();
+  await expect(page.getByText("1 imported", { exact: true })).toBeVisible();
+  const stored = await page.evaluate(() =>
+    JSON.parse(
+      localStorage.getItem("bundlelab:imported-products:v1") ?? "null",
+    ),
+  );
+  expect(stored.products.map((product: { id: string }) => product.id)).toEqual([
+    "CUSTOM-1",
+  ]);
+});
+
+test("keyboard-only catalog details trap focus and restore it on Escape", async ({
+  page,
+}) => {
+  await page.goto("/catalog");
+  const search = page.getByRole("textbox", { name: "Search products" });
+  await search.focus();
+  await page.keyboard.type("BL-001");
+  const opener = page.getByRole("button", {
+    name: "View Dewdrop Gel Cleanser",
+    exact: true,
+  });
+  for (
+    let step = 0;
+    step < 12 &&
+    !(await opener.evaluate((element) => element === document.activeElement));
+    step++
+  )
+    await page.keyboard.press("Tab");
+  await expect(opener).toBeFocused();
+  await page.keyboard.press("Enter");
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toBeVisible();
+  for (let step = 0; step < 8; step++) {
+    await page.keyboard.press("Tab");
+    expect(
+      await dialog.evaluate((element) =>
+        element.contains(document.activeElement),
+      ),
+    ).toBe(true);
+  }
+  await page.keyboard.press("Escape");
+  await expect(opener).toBeFocused();
+});

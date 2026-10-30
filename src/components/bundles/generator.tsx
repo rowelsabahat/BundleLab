@@ -16,10 +16,9 @@ import {
   decimalToInteger,
   resolveConstraints,
 } from "@/lib/recommendations/constraints";
-import { calculateBundle } from "@/lib/recommendations/engine";
+import { verifyRecommendationResponse } from "@/lib/recommendations/engine";
 import {
   recommendationInputSchema,
-  recommendationResponseSchema,
   type Recommendation,
   type RecommendationMode,
   type RecommendationResponse,
@@ -124,18 +123,16 @@ export function Generator({
             : "Recommendations could not be loaded. Try again.";
         throw new Error(message);
       }
-      const parsed = recommendationResponseSchema.parse(body);
+      const parsed = verifyRecommendationResponse(
+        body,
+        seedProducts,
+        resolveConstraints(input),
+      );
       if (parsed.mode !== mode)
         throw new Error(
           "The server mode changed. Reload the page before generating again.",
         );
-      // Recompute from known products, never display supplied financial values as source data.
-      const verified = parsed.recommendations.map((r) => ({
-        ...r,
-        totals: calculateBundle(r, seedProducts),
-      }));
-      if (id === requestId.current)
-        setResult({ ...parsed, recommendations: verified });
+      if (id === requestId.current) setResult(parsed);
     } catch (failure) {
       if (id === requestId.current)
         setError(

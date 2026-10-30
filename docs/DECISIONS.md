@@ -109,3 +109,11 @@ Accepted. Versioned per-bundle copy storage, autosave, stale-tab protection and 
 ## 027 — Exportable storefront proof, not commerce integration
 
 Accepted. Use existing local artwork and current text/price for an interactive storefront preview. Product thumbnails and copy sections work; no fake reviews, checkout or publishing. Export formatted clipboard text or JSON with approved exact-cent price/lineup and review metadata. Exclude internal product costs and secrets. This completes the portfolio MVP journey without Shopify APIs, image generation, authentication or payments.
+
+## 028 — Pre-launch validation at the display and persistence boundaries
+
+Accepted, 2026-10-30. Recheck returned recommendation constraints, status, distinct sets, one-unit quantities and recalculated economics before displaying a constraint-pass label. Do not trust response totals or changed guardrails. Catalog import/clear now has the same optimistic stale-tab protection as bundles/listings; live sync and merge reconciliation remain outside scope. Deleting an unrelated named bundle must preserve the active draft's incomplete numeric inputs. Require the exact application/json media type (charset parameters allowed), and preserve cancellation/timeout classification even while reading upstream error bodies.
+
+## 029 — Reproducible portfolio QA without paid service dependencies
+
+Accepted, 2026-10-30. Extend the existing complete Demo browser workflow with stale-tab, draft-preservation, malformed-response, keyboard-only focus and targeted supporting-text contrast regressions. Use deterministic Demo server configuration and isolated contexts; mock paid AI transport in unit/API tests. CI runs the full browser suite, retains failure diagnostics, limits workers and has an explicit timeout. Live OpenAI, deployed Vercel behavior, other browser engines and complete assistive-technology conformance remain separately disclosed checks, not implied test passes. See QA.md for this run's evidence. Error classification reference: [official OpenAI error codes](https://developers.openai.com/api/docs/guides/error-codes).

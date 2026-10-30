@@ -7,6 +7,7 @@ import {
   satisfies,
   validateRecommendation,
   validateDistinctRecommendations,
+  verifyRecommendationResponse,
 } from "./engine";
 import { resolveConstraints } from "./constraints";
 import {
@@ -91,6 +92,80 @@ describe("hard-constraint interpretation", () => {
   });
 });
 describe("deterministic financial boundary", () => {
+  it("revalidates returned guardrails and ignores forged totals before a client pass label", () => {
+    const recommendation = validateRecommendation(
+      candidate,
+      seedProducts,
+      constraints,
+    );
+    const response = {
+      mode: "demo",
+      status: "ok",
+      constraints,
+      recommendations: [recommendation],
+    };
+    const forged = {
+      ...response,
+      recommendations: [
+        {
+          ...recommendation,
+          totals: { ...recommendation.totals, revenueCents: 1 },
+        },
+      ],
+    };
+    expect(
+      verifyRecommendationResponse(forged, seedProducts, constraints)
+        .recommendations[0].totals,
+    ).toEqual(recommendation.totals);
+    expect(() =>
+      verifyRecommendationResponse(response, seedProducts, {
+        ...constraints,
+        maxPriceCents: 1,
+      }),
+    ).toThrow();
+    expect(() =>
+      verifyRecommendationResponse(
+        {
+          ...response,
+          recommendations: [{ ...recommendation, discountBps: 0 }],
+        },
+        seedProducts,
+        constraints,
+      ),
+    ).toThrow();
+    expect(() =>
+      verifyRecommendationResponse(
+        { ...response, recommendations: [recommendation, recommendation] },
+        seedProducts,
+        constraints,
+      ),
+    ).toThrow();
+    expect(() =>
+      verifyRecommendationResponse(
+        { ...response, status: "infeasible" },
+        seedProducts,
+        constraints,
+      ),
+    ).toThrow();
+    expect(() =>
+      verifyRecommendationResponse(
+        {
+          ...response,
+          recommendations: [
+            {
+              ...recommendation,
+              lines: recommendation.lines.map((line) => ({
+                ...line,
+                quantity: 2,
+              })),
+            },
+          ],
+        },
+        seedProducts,
+        constraints,
+      ),
+    ).toThrow();
+  });
   it("recalculates totals from catalog IDs and rounds once at bundle level", () => {
     const result = validateRecommendation(candidate, seedProducts, constraints);
     expect(result.totals).toMatchObject({

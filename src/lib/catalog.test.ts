@@ -2,7 +2,12 @@ import { describe, expect, it } from "vitest";
 import { seedProducts, filterProducts } from "./catalog";
 import { productSchema, productListSchema } from "./schemas";
 import { productMarginBps } from "./calculations";
-import { decodeImportedCatalog, encodeImportedCatalog } from "./storage";
+import {
+  CATALOG_STORAGE_KEY,
+  decodeImportedCatalog,
+  encodeImportedCatalog,
+  persistImportedCatalog,
+} from "./storage";
 
 describe("catalog trust boundaries", () => {
   it("provides exactly 24 unique fictional products in both categories", () => {
@@ -78,6 +83,28 @@ describe("deterministic item margin", () => {
 });
 describe("local catalog envelope", () => {
   const imported = { ...seedProducts[0], id: "CUSTOM-1" };
+  it("refuses stale imports and clears without overwriting another tab", () => {
+    const values = new Map<string, string>();
+    const storage = {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => {
+        values.set(key, value);
+      },
+      removeItem: (key: string) => {
+        values.delete(key);
+      },
+    };
+    const first = persistImportedCatalog(storage, [imported], null);
+    expect(() => persistImportedCatalog(storage, [], null)).toThrow(
+      /Another tab/,
+    );
+    expect(() => persistImportedCatalog(storage, null, null)).toThrow(
+      /Another tab/,
+    );
+    expect(storage.getItem(CATALOG_STORAGE_KEY)).toBe(first);
+    expect(persistImportedCatalog(storage, null, first)).toBeNull();
+    expect(storage.getItem(CATALOG_STORAGE_KEY)).toBeNull();
+  });
   it("round trips valid products and handles missing storage", () => {
     expect(
       decodeImportedCatalog(encodeImportedCatalog([imported]), seedProducts),

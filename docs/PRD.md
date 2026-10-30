@@ -1,6 +1,6 @@
 # BundleLab product requirements
 
-Status: catalog milestone implemented. Overview, catalog browsing/details, and validated browser-local CSV import are shipped. AI/Demo recommendations, deterministic bundle calculations, and a browser-local chosen-bundle editor are implemented. The full editor and saved-bundle library are implemented. Listing Studio generates grounded editable copy in AI or explicit Demo Mode, previews it and exports JSON/formatted text.
+Status: end-to-end portfolio MVP implemented; pre-launch QA is recorded in QA.md. Overview, catalog browsing/details, and validated browser-local CSV import are shipped. AI/Demo recommendations, deterministic bundle calculations, and a browser-local chosen-bundle editor are implemented. The full editor and saved-bundle library are implemented. Listing Studio generates grounded editable copy in AI or explicit Demo Mode, previews it and exports JSON/formatted text.
 
 ## Problem and hypothesis
 
@@ -36,10 +36,10 @@ Shopify APIs or publishing, authentication, payments, external databases, multi-
 
 ## MVP acceptance criteria
 
-- A validated seed contains exactly 24 unique product IDs; every suggestion and saved line references that catalog.
+- A validated seed contains exactly 24 unique product IDs; every recommendation references the seed; local editor and listing lines may also reference validated imports.
 - Manual creation, calculation, editing, saving, reload, deletion, and copy workflows work without OpenAI access.
 - Calculation unit tests cover rounding, zero discount, discount bounds, quantities, zero revenue, loss, unknown IDs, duplicate lines, and stock limits.
-- No model output is used as price, cost, discount, stock, or computed profit. Invalid model responses fail safely and leave the manual draft intact.
+- No model output is trusted as an authoritative price, cost, stock, or computed profit. Proposed discounts are bounded, validated inputs to deterministic calculations. Invalid model responses fail safely and leave the manual draft intact.
 - Browser tests cover the core journey, persistence, API failures, and a narrow viewport. Keyboard operation, visible focus, labeled controls, and accessible errors are reviewed.
 - Lint, strict typecheck, unit tests, browser tests, and production build pass; no secrets ship to the browser.
 

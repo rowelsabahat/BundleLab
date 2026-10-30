@@ -6,7 +6,7 @@ Premium, calm commerce software with an original identity. Warm off-white canvas
 
 ## Foundation implemented
 
-Semantic CSS variables in `src/app/globals.css` drive Tailwind tokens and shadcn primitives. Use system sans-serif fonts for fast, network-independent rendering; use tabular numerals for future financial data. A responsive merchant shell, overview, product catalog, accessible dialogs, and planned-feature destinations establish the workspace. Local CSS product studies create cohesive decorative artwork without external assets. Light theme only for this MVP.
+Semantic CSS variables in `src/app/globals.css` drive Tailwind tokens and shadcn primitives. Use system sans-serif fonts for fast, network-independent rendering; use tabular numerals for future financial data. A responsive merchant shell, overview, product catalog, accessible dialogs, and functional Generator, Editor and Listing Studio destinations establish the workspace. Local CSS product studies create cohesive decorative artwork without external assets. Light theme only for this MVP.
 
 ## Layout and typography
 
@@ -28,8 +28,12 @@ The composer pairs a generous prompt field with optional numeric/category/theme 
 
 ## Full editor and notebook
 
-Use a generous product canvas alongside a sticky financial summary on desktop; stack them in task order on mobile. Editable discount and exact price sit together with an explicit pricing-mode explanation. Original guardrails and target warnings remain separate from estimates. A right-side product drawer uses searchable/filterable current catalog rows with thumbnail, price, cost, stock and selected state. Trap/restore focus and keep Done reachable. Show working-draft autosave separately from explicit named-library save. Saved cards support reopen/rename/duplicate/delete without nested controls; destructive operations and replacing unsaved edits require clear dialogs. The Listing Studio handoff shows real selected data and clearly states that generation is planned.
+Use a generous product canvas alongside a sticky financial summary on desktop; stack them in task order on mobile. Editable discount and exact price sit together with an explicit pricing-mode explanation. Original guardrails and target warnings remain separate from estimates. A right-side product drawer uses searchable/filterable current catalog rows with thumbnail, price, cost, stock and selected state. Trap/restore focus and keep Done reachable. Show working-draft autosave separately from explicit named-library save. Saved cards support reopen/rename/duplicate/delete without nested controls; destructive operations and replacing unsaved edits require clear dialogs. The Listing Studio handoff saves the selected bundle before opening the functional copy workspace.
 
 ## Listing Studio
 
 Use an editorial two-column workspace: editable copy on the left, a restrained storefront proof on the right; stack them on mobile. Keep the approved bundle strip (lineup, name, quantity and price) separate from copy controls. Three tone buttons have explicit pressed states; generation is an intentional action with a clear mode label and real pending/cancel states. Draft autosave, regeneration confirmation and context-review warnings protect edits. The storefront uses the existing botanical artwork, functional image thumbnails and expandable details without fake commerce promises. Copy/JSON export actions are real, require complete fields and report success/error honestly. Merchant edits are visibly distinct from generated facts.
+
+## QA readability guardrail
+
+Supporting catalog, constraint, editor and listing text uses the muted foreground token instead of pale decorative greens. Browser regressions measure selected essential supporting text against its opaque surface at a minimum 4.5:1 contrast in desktop and mobile Chromium. Decorative artwork remains separate; this limited check is not a complete WCAG conformance audit.

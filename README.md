@@ -54,7 +54,8 @@ npm run check
 - `docs/PRD.md`: product hypothesis, journeys, scope, acceptance criteria.
 - `docs/ARCHITECTURE.md`: proposed schemas, state, API, money and AI boundaries.
 - `docs/DESIGN.md`: visual and interaction system.
-- `docs/DECISIONS.md`: initial tradeoffs.
+- `docs/DECISIONS.md`: product and engineering tradeoffs.
+- `docs/QA.md`: pre-launch audit, executed results, limitations and reproducible manual checks.
 
 ## Deployment
 
@@ -176,3 +177,9 @@ Reopening a bundle restores its copy. If its products, quantities, pricing or ca
 For real AI, explicitly set `BUNDLELAB_MODE=ai` plus a funded API key and restart. Confirm **AI Mode · OpenAI** in both Generator and Studio. No mode switches silently. Future work: richer vetted editorial styles, broader source verification and stronger deployment-wide abuse controls. Shopify integration and automatic publishing remain outside this MVP.
 
 The npm dev/build scripts explicitly use Next.js Webpack and Tailwind PostCSS for portability; see decision 009. No deployment is created by this implementation step.
+
+## Pre-launch QA milestone
+
+The QA pass adds regression coverage for stale-tab imports, active incomplete inputs during unrelated deletion, response constraint verification, exact JSON media types, timeout classification, keyboard focus and selected essential text contrast. Catalog imports/clears now refuse stale-tab overwrites; reload before continuing in that tab. No live cross-tab merge or synchronization is implied.
+
+GitHub Actions uses Node 24, npm ci, formatting, lint, typecheck, unit tests, production build and the full desktop/mobile Chromium suite. It explicitly selects Demo Mode with no API key, installs Chromium system dependencies and retains browser failure diagnostics for seven days. See [docs/QA.md](docs/QA.md) for actual local results and checks still requiring manual verification. No remote CI or deployment success is implied by local checks.

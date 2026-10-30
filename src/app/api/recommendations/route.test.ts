@@ -47,6 +47,40 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 describe("recommendations server route with mocked OpenAI transport", () => {
+  it("requires the exact JSON media type and permits charset parameters", async () => {
+    vi.stubEnv("BUNDLELAB_MODE", "demo");
+    expect(
+      (await POST(request(input, { "Content-Type": "application/jsonp" })))
+        .status,
+    ).toBe(415);
+    expect(
+      (
+        await POST(
+          request(input, { "Content-Type": "application/json; charset=utf-8" }),
+        )
+      ).status,
+    ).toBe(200);
+  });
+  it("enforces the route request window and exposes a retry interval", async () => {
+    vi.stubEnv("BUNDLELAB_MODE", "demo");
+    for (let attempt = 0; attempt < 6; attempt++)
+      expect(
+        (
+          await POST(
+            request(
+              { ...input, prompt: "short" },
+              { "x-forwarded-for": "qa-rate-window" },
+            ),
+          )
+        ).status,
+      ).toBe(400);
+    const limited = await POST(
+      request(input, { "x-forwarded-for": "qa-rate-window" }),
+    );
+    expect(limited.status).toBe(429);
+    expect(limited.headers.get("Retry-After")).toBe("60");
+    expect(limited.headers.get("Cache-Control")).toBe("no-store");
+  });
   it("demo makes no external call and is explicitly labeled", async () => {
     vi.stubEnv("BUNDLELAB_MODE", "demo");
     const fetcher = vi.fn();

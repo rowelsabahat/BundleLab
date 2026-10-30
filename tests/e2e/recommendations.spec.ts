@@ -94,3 +94,28 @@ test("infeasible constraints and service errors remain truthful", async ({
     workspace.getByText("Demo Mode · Simulated", { exact: true }),
   ).toBeVisible();
 });
+
+test("a successful but constraint-violating response is never labeled checked", async ({
+  page,
+}) => {
+  await page.route("**/api/recommendations", async (route) => {
+    const response = await route.fetch({
+      headers: {
+        ...route.request().headers(),
+        "x-forwarded-for": `qa-forged-${test.info().project.name}`,
+      },
+    });
+    const body = await response.json();
+    body.recommendations[0].discountBps = 0;
+    body.constraints.maxPriceCents = 100;
+    await route.fulfill({ response, json: body });
+  });
+  await page.goto("/bundle-generator");
+  await page.getByRole("button", { name: "Explore demo bundles" }).click();
+  await expect(page.getByRole("main").getByRole("alert")).toContainText(
+    "does not match the requested constraints",
+  );
+  await expect(
+    page.getByRole("region", { name: "Bundle recommendations" }),
+  ).toHaveCount(0);
+});
