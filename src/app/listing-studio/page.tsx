@@ -1,10 +1,4 @@
-import { PlannedView } from "@/components/planned-view";
+import { ListingHandoff } from "@/components/bundles/listing-handoff";
 export default function Page() {
-  return (
-    <PlannedView
-      title="Listing Studio"
-      description="Turn your bundle into a considered product story."
-      step="03 / TELL THE STORY"
-    />
-  );
+  return <ListingHandoff />;
 }

@@ -2,17 +2,17 @@
 
 ## Implemented milestone
 
-Next.js App Router serves `/` (Overview), `/catalog`, and functional bundle pages at `/bundle-generator` and `/bundle-editor`. `/listing-studio` remains an informational planned page. The root layout renders `AppShell`, with a persistent `CatalogProvider`. Server route components delegate interactive views to client components. Navigation uses Next Link and pathname-based active states. Mobile navigation becomes a horizontally scrollable bar.
+Next.js App Router serves `/` (Overview), `/catalog`, and functional bundle pages at `/bundle-generator` and `/bundle-editor`. `/listing-studio` previews the saved editor handoff; generation remains planned. The root layout renders `AppShell`, with a persistent `CatalogProvider`. Server route components delegate interactive views to client components. Navigation uses Next Link and pathname-based active states. Mobile navigation becomes a horizontally scrollable bar.
 
 The 24-product JSON seed is parsed with Zod at module load. `schemas.ts` owns the strict Product schema and unique-ID list validator; the client provider restores separately stored imported products after mount. Product fields are integer cents, bounded stock, USD, tags, and a local artwork variant. Zero prices are allowed by the milestone request (overriding the initial proposed positive-price rule). Cost may exceed price; show the loss rather than reject valid merchant data. `calculations.ts` implements item gross margin and integer-cent bundle totals, with null margin for zero revenue. Recommendations require positive revenue.
 
 `csv.ts` implements a bounded, dependency-free quoted CSV reader and row validation. Dollar strings convert to cents by splitting whole/fraction parts. Exact required headers may be reordered. Import is append-only and atomic: invalid rows, IDs colliding with current catalog or file, or cumulative limits reject the full file. No server upload occurs.
 
-`storage.ts` validates `{version: 1, products: [...]}` under `bundlelab:imported-products:v1`, rejects corrupt/unsupported data and seed collisions. Persist before updating in-memory products; failed writes leave the catalog unchanged. Invalid stored data is retained until explicit clear, with a recovery warning and import disabled. Clear requires confirmation. Separate tabs observe updates on reload, not via live synchronization. A separate versioned chosen draft is implemented; a saved-bundle library is not.
+`storage.ts` validates `{version: 1, products: [...]}` under `bundlelab:imported-products:v1`, rejects corrupt/unsupported data and seed collisions. Persist before updating in-memory products; failed writes leave the catalog unchanged. Invalid stored data is retained until explicit clear, with a recovery warning and import disabled. Clear requires confirmation. Separate tabs observe updates on reload, not via live synchronization. A separate recommendation handoff and an atomic working-draft/named-bundle envelope are implemented.
 
 Radix Dialog provides trapping, Escape dismissal, semantics, and explicit focus restoration for product details, import, and clear confirmation. Artwork is decorative CSS with deterministic palettes/silhouettes; product names remain textual and no remote images are fetched. Route boundaries and catalog restoration have loading/error states. A server-only recommendation route and OpenAI adapter are implemented; listing generation is not.
 
-## Module boundaries (bundle library and listings remain planned)
+## Module boundaries (listing generation remains planned)
 
 - `src/data/products.json`: immutable fictional catalog; validate on load with Zod and assert 24 unique IDs.
 - `src/lib/schemas.ts`: runtime schemas and inferred domain types; no separate competing interfaces.
@@ -21,7 +21,8 @@ Radix Dialog provides trapping, Escape dismissal, semantics, and explicit focus 
 - `src/lib/storage.ts`: versioned localStorage adapter, parsing, migrations only as needed, and friendly recovery.
 - `src/lib/server/`: server-only mode/configuration, body and rate limits, and native-fetch OpenAI Responses adapter.
 - `src/lib/recommendations/`: shared schemas, bounded prompt constraint parser, deterministic feasibility/ranking, candidate validation, and chosen-draft codec.
-- `src/components/catalog`, `bundle-builder`, `profitability`, `saved-bundles`, and `listing-editor`: feature components added when needed. Keep shared primitives in `components/ui`.
+- `src/lib/editor/`: editor pricing model, strict working/named schemas, migration, library operations, and optimistic stale-tab write protection.
+- `src/components/bundles/`: Generator, full editor, economics summary, drawer, named library and Listing Studio handoff. Keep shared primitives in `components/ui`.
 
 Server components render static structure and catalog context. Small client components own interactive drafts, storage, and copy actions. Use React state or a reducer for the active draft; derive financial results from inputs. Avoid Redux, global stores, and a generic repository layer. Read localStorage after mount to avoid hydration mismatch; never access it at module scope. Surface quota/security errors and do not imply cross-device storage.
 
@@ -31,8 +32,9 @@ All objects are Zod-validated at trust boundaries; reject unknown properties for
 
 - Product: `id`, `name`, `category` (skincare/wellness), `description`, `tags`, `priceCents`, `costCents`, `stock`, `currency: USD`. Amounts and stock are nonnegative bounded integers; zero prices are supported, and imported costs can exceed prices. Seed costs do not exceed prices. Artwork is a local enum with a bottle default. No external images required.
 - BundleLine: `productId`, `quantity` (integer 1–99, limited by stock). Reject duplicates and unknown IDs. A bundle has 2–5 distinct lines.
-- BundleDraft: lines, `discountBps` (integer 0–5000), editable name and listing text. Cap text sizes.
-- SavedBundle: `id` (client UUID), `createdAt`, `updatedAt` (ISO strings), draft. Storage envelope `{version: 1, bundles: [...]}` under `bundlelab:saved-bundles:v1`. Revalidate catalog references and recompute derived values on load; never persist authoritative totals.
+- Recommendation BundleDraft remains strict: 2–5 lines, `discountBps` (integer 0–5000), and title.
+- EditorDraft: title (blank permitted only while working), 0–5 unique lines, and discriminated pricing `{mode: discount, discountBps}` or `{mode: price, priceCents}`. Named saves require nonblank title and at least two lines.
+- SavedBundle: `id` (client UUID), `createdAt`, `updatedAt` (ISO strings), draft. Storage envelope `{version: 1, bundles: [...], active, recommendationAt}` under `bundlelab:saved-bundles:v1`. Records include editor draft, original constraints, source, rationale, and timestamps. Revalidate catalog references and recompute derived values on load; never persist authoritative totals.
 - Recommendation: title, rationale, and validated BundleLines. At most three suggestions; model does not supply prices or financial results.
 - Listing: title, description, and promotional text; enforce length limits and avoid unsupported health/performance claims.
 
@@ -64,7 +66,21 @@ Parse the provider envelope and generated JSON with Zod, handle refusal/incomple
 
 Request protection: JSON only, same-origin check when Origin is present, 8 KB streamed byte limit, 3-second body timeout, 64 KB provider response limit, six attempts per IP/minute, two concurrent AI calls, thirty AI calls per instance/hour. Maps are bounded and expired entries pruned. `maxDuration: 30` on the Node route leaves room around the provider timeout. Counters are best-effort in-memory protections; cold starts, IP spoofing outside a trusted host, and multiple Vercel instances preclude a global spending guarantee. Use hosting-level protection/provider budgets for a broader public AI deployment. Error envelopes are `{error:{code,message}}` with no raw provider details or credentials; status codes distinguish 400/403/408/413/415/422/429/502/503/504. Responses are no-store. No prompt/key logging.
 
-The client displays mode explicitly, clears stale recommendations when inputs change, provides cancel/skeleton/error/no-results states, validates response shape and recomputes figures using seed records. Customization persists `{version:1,draft,constraints,source,savedAt}` at `bundlelab:chosen-bundle:v1` before navigation. Save failures keep the user on the generator. Editor restore revalidates IDs/stock and derives totals; products/quantities/name/discount are editable. Changed constraints may fail, with a visible warning rather than a false compliance label. One active draft is saved on an explicit action; a library remains planned.
+The client displays mode explicitly, clears stale recommendations when inputs change, provides cancel/skeleton/error/no-results states, validates response shape and recomputes figures using seed records. Customization persists `{version:1,draft,constraints,source,savedAt,rationale?}` at `bundlelab:chosen-bundle:v1` before navigation. Save failures keep the user on the generator. Older handoffs without rationale are supported.
+
+## Full editor and local library
+
+The editor waits for CatalogProvider hydration, then reads `bundlelab:saved-bundles:v1`. A newly timestamped recommendation is migrated into a working editor record once, preserving its source/rationale/constraints. The consumed timestamp prevents reimporting the old selection after deleting a saved bundle. Existing named records are retained.
+
+`calculateEditorBundle` accepts an editable draft, resolves only current catalog IDs, validates unique lines and quantities/stock, and sums integer-cent retail/cost values. Discount-mode pricing uses the established half-up-once rule. Direct-price mode preserves the exact cent input and derives discount from `(retail - sale)/retail`. Never round a percentage and convert it back to reconstruct a direct price. Gross profit is sale minus cost, and margin is profit/revenue only if revenue is positive. Discount is null at zero retail; margin is null at zero revenue. Direct price must be within `floor(retail/2)` through retail to save; cent rounding can make effective percentages differ slightly from requested 50%. No silent adjustment after product changes. Zero/empty working totals are supported; empty drafts cannot be saved as named bundles.
+
+The editor may use local imported products, independently of the server recommendation catalog. Product data is never supplied by model-generated names or values. Missing/deleted import IDs remain visible as unavailable, allowing removal or CSV restoration; no stale totals or invented prices substitute for them. Invalid raw numeric strings remain tab-local and hide financial totals. A fixed price outside allowed bounds shows actual numbers with an error and disabled saves. Price/margin/category target failures are separate advisory warnings and remain visible when a valid draft is saved or previewed in Studio.
+
+The library codec uses strict Zod schemas, a 1 MB input guard, and at most 50 named bundles. The active working record allows empty selections; named records require 2–5 products and a trimmed nonblank title. Store only input values plus source metadata, never derived totals or product-price snapshots. Every read/write revalidates the envelope; totals are recalculated from current catalog records. Individual missing catalog references are retained for repair.
+
+Working model changes autosave to `active`; explicit Save copies them to the named entry identified by UUID (or inserts a new entry). Rename, duplicate, delete, and active selection updates are pure library operations followed by one atomic `setItem`. A raw-envelope comparison rejects stale-tab writes instead of overwriting another tab. Library mutations update UI only after a successful write; a failed working autosave retains edits in this tab with a visible warning. Corrupt libraries are not overwritten; an explicit confirmed reset can clear them. Replacing unsaved named edits and deleting a record require a dialog. No distributed synchronization or browser-storage durability is claimed.
+
+Proceed to Listing Studio performs a validated named save before navigation. The Studio restores the active record only if it matches a named saved bundle and recalculates a preview. It makes no generation call, fabricates no listing copy, and preserves a clear return path to the editor. Listing generation remains future scope.
 
 Official implementation references: [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [GPT-4.1 mini](https://developers.openai.com/api/docs/models/gpt-4.1-mini). No live paid API call was made during automated verification.
 

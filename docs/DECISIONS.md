@@ -77,3 +77,19 @@ Accepted. JSON/body size/read limits, provider response/token/time limits, cance
 ## 019 — One chosen draft before a library
 
 Accepted. Persist the selected bundle’s IDs, quantities, proposed discount, advisory title, original constraints, source mode and timestamp before navigating. Store no authoritative totals. Revalidate and recalculate in the editor; show constraint failures after edits and explicit storage errors. A new selection replaces the one active draft. Save a draft that misses the original limits only with its visible warning; a multi-bundle library and listing generation remain separate milestones.
+
+## 020 — Last-edited pricing field wins
+
+Accepted. Keep discount input and direct cent price as two explicit pricing modes. Product edits retain the percentage in discount mode and retain exact cents in price mode. Compute effective discount from actual retail/sale, never reconstruct a direct price from a rounded ratio. Bound discount input to 0–50%. A direct saved price must fit the same cent-rounded interval; invalid working pricing is visible and never silently clamped. Zero-denominator ratios are undefined. This preserves the existing half-up-once convention, including odd-cent rounding at the 50% boundary.
+
+## 021 — One atomic local notebook
+
+Accepted. Use `bundlelab:saved-bundles:v1` for the working draft, up to 50 named records, and a consumed recommendation timestamp. Working edits autosave independently from explicit named saves. Library changes are atomic, have UUID identity, and refuse stale-tab overwrites. A failed working write keeps edits in memory with an error; a failed named save does not invent success. Corrupt storage is retained until explicit reset. Keep IDs/inputs/source/constraints/rationale, no derived financial totals. Existing v1 recommendation handoffs migrate on opening and are consumed once; deleting a bundle does not resurrect the handoff.
+
+## 022 — Imported products in the local editor
+
+Accepted. The manual editor and picker resolve the current sample plus imported catalog, while AI/Demo server recommendations remain seed-only. Local merchant catalog input is distinct from AI-generated financial source data. Missing imports are repairable references with errors, not reasons to fabricate prices or erase saved bundles. Working drafts can be empty; named bundles still require 2–5 unique products, positive stock-bounded integer quantities, and a name.
+
+## 023 — Studio handoff before listing generation
+
+Accepted. Proceed saves the named bundle before navigating to a recalculated preview in Listing Studio. Retain explicit “generation planned” copy, no artificial AI behavior or invented listing. Preserve target warnings and a return path. The actual listing authoring workflow remains a later milestone.

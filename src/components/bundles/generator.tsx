@@ -163,6 +163,7 @@ export function Generator({
           draft: draftFromRecommendation(recommendation),
           constraints: result.constraints,
           source: result.mode,
+          rationale: recommendation.rationale,
           savedAt: new Date().toISOString(),
         }),
       );

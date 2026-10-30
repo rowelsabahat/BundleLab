@@ -40,7 +40,7 @@ test("explicit Demo Mode produces valid cards and a persistent editable chosen b
   await page
     .getByLabel("Bundle name", { exact: true })
     .fill("My starter ritual");
-  await workspace.getByRole("button", { name: "Save changes" }).click();
+  await workspace.getByRole("button", { name: "Save bundle" }).click();
   await expect(
     workspace.getByRole("status").filter({ hasText: "Changes saved" }),
   ).toBeVisible();
@@ -52,7 +52,9 @@ test("explicit Demo Mode produces valid cards and a persistent editable chosen b
     .getByRole("spinbutton", { name: /^Quantity for/ })
     .first();
   await quantity.fill("99");
-  await expect(workspace.getByText(/This draft does not meet/)).toBeVisible();
+  await expect(
+    workspace.getByRole("alert").filter({ hasText: /quantities|available/ }),
+  ).toBeVisible();
 });
 test("infeasible constraints and service errors remain truthful", async ({
   page,

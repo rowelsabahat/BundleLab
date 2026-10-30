@@ -5,7 +5,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? "github" : "list",
-  use: { baseURL: "http://127.0.0.1:3000", trace: "retain-on-failure" },
+  use: { baseURL: "http://127.0.0.1:3100", trace: "retain-on-failure" },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
     {
@@ -14,8 +14,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run build && npm run start -- --hostname 127.0.0.1",
-    url: "http://127.0.0.1:3000",
+    command:
+      "npm run build && npm run start -- --hostname 127.0.0.1 --port 3100",
+    url: "http://127.0.0.1:3100",
     reuseExistingServer: false,
     timeout: 180_000,
     env: { BUNDLELAB_MODE: "demo", OPENAI_API_KEY: "" },

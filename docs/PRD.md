@@ -1,6 +1,6 @@
 # BundleLab product requirements
 
-Status: catalog milestone implemented. Overview, catalog browsing/details, and validated browser-local CSV import are shipped. AI/Demo recommendations, deterministic bundle calculations, and a browser-local chosen-bundle editor are implemented. Saved-bundle library and Listing Studio remain planned.
+Status: catalog milestone implemented. Overview, catalog browsing/details, and validated browser-local CSV import are shipped. AI/Demo recommendations, deterministic bundle calculations, and a browser-local chosen-bundle editor are implemented. The full editor and saved-bundle library are implemented. Listing Studio shows the saved handoff; generation remains planned.
 
 ## Problem and hypothesis
 
@@ -34,7 +34,7 @@ Milestone addition: browser-local CSV import with a downloadable sample, atomic 
 
 Shopify APIs or publishing, authentication, payments, external databases, multi-user sync, real sales analytics, medical advice, tax/shipping/payment-fee estimates, multi-currency, automated store/catalog synchronization, background jobs, and production-scale abuse prevention infrastructure.
 
-## MVP acceptance criteria (partially implemented; full library/listing workflow remains planned)
+## MVP acceptance criteria (partially implemented; listing generation/copy workflow remains planned)
 
 - A validated seed contains exactly 24 unique product IDs; every suggestion and saved line references that catalog.
 - Manual creation, calculation, editing, saving, reload, deletion, and copy workflows work without OpenAI access.
@@ -49,4 +49,13 @@ Use scenario-based task walkthroughs and deterministic test fixtures first. Late
 
 ## Recommendation milestone boundaries
 
-Both modes generate one unit each of 2–5 sample products. Demo is deterministic and visibly simulated; AI Mode calls OpenAI and never falls back. Price, exact margin, category, stock, IDs, and 0–50% discount boundaries are hard checks; theme is advisory. Prompt numeric constraints use a disclosed bounded grammar and unsupported numeric wording asks for clarification. Imported products remain catalog-only until a server catalog authority exists. No-results distinguishes mathematically infeasible requests from feasible requests whose AI suggestions did not pass validation. A chosen recommendation can be edited and explicitly saved as one browser-local draft. No-key reviewers use Demo; testing AI requires an explicitly configured key/mode.
+Both modes generate one unit each of 2–5 sample products. Demo is deterministic and visibly simulated; AI Mode calls OpenAI and never falls back. Price, exact margin, category, stock, IDs, and 0–50% discount boundaries are hard checks; theme is advisory. Prompt numeric constraints use a disclosed bounded grammar and unsupported numeric wording asks for clarification. Imported products can be selected in the local editor, but are excluded from server recommendations until a server catalog authority exists. No-results distinguishes mathematically infeasible requests from feasible requests whose AI suggestions did not pass validation. A chosen recommendation can be edited and saved to a browser-local named library; its working draft also autosaves. No-key reviewers use Demo; testing AI requires an explicitly configured key/mode.
+
+## Full editor milestone acceptance (implemented)
+
+- A recommendation preserves products, title, rationale, source, pricing and original constraints in the editor.
+- Manual/edited bundles use the current catalog, including local imports, and allow 0–5 products while working; named saves require 2–5 distinct products and valid stock-bounded quantities.
+- The last-edited pricing field controls the draft: discount percentage follows retail changes, while direct price remains fixed to cents. Invalid fields hide totals and disable saves. No price is silently clamped.
+- Named bundles can be saved, reopened, renamed, duplicated and deleted; working autosave is separate from named saves. Stale-tab updates and storage failures do not fabricate save success.
+- Zero revenue/retail have undefined ratios. Original target misses and negative profit are disclosed. Direct prices must respect the cent-rounded 0–50% discount range before saving.
+- A searchable/filterable drawer works on desktop/mobile with keyboard focus management. Listing Studio accepts a saved bundle preview without simulating listing generation.

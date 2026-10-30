@@ -13,6 +13,7 @@ export const savedDraftSchema = z.strictObject({
   constraints: constraintsSchema,
   source: z.enum(["demo", "ai"]),
   savedAt: z.iso.datetime(),
+  rationale: z.string().max(350).optional(),
 });
 export type SavedDraft = z.infer<typeof savedDraftSchema>;
 export function decodeChosenBundle(raw: string | null): SavedDraft | null {
