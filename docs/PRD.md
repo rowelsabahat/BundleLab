@@ -1,6 +1,6 @@
 # BundleLab product requirements
 
-Status: foundation only. All product capabilities below are planned, not shipped.
+Status: catalog milestone implemented. Overview, catalog browsing/details, and validated browser-local CSV import are shipped. Bundle workflows and AI capabilities remain planned.
 
 ## Problem and hypothesis
 
@@ -20,6 +20,8 @@ An assumed owner-operator of a small skincare and wellness shop, maintaining a m
 
 ## MVP requirements
 
+Milestone addition: browser-local CSV import with a downloadable sample, atomic row validation, unique IDs, local persistence, and clear recovery/error messages. This supersedes the initial exclusion of catalog import.
+
 - Exactly 24 distinct, realistic fictional skincare and wellness products in local JSON; stable IDs, integer cent prices and costs, stock counts, tags, and descriptive content. Clearly mark sample data.
 - Catalog browsing and filtering, manual builder with 2–5 distinct products, positive integer quantities, and inventory validation.
 - Percentage discounts from 0 to 50%, represented as integer basis points. One currency (USD), explicit rounding and gross-profit assumptions.
@@ -30,7 +32,7 @@ An assumed owner-operator of a small skincare and wellness shop, maintaining a m
 
 ## Out of scope
 
-Shopify APIs or publishing, authentication, payments, external databases, multi-user sync, real sales analytics, medical advice, tax/shipping/payment-fee estimates, multi-currency, catalog import, background jobs, and production-scale abuse prevention infrastructure.
+Shopify APIs or publishing, authentication, payments, external databases, multi-user sync, real sales analytics, medical advice, tax/shipping/payment-fee estimates, multi-currency, automated store/catalog synchronization, background jobs, and production-scale abuse prevention infrastructure.
 
 ## MVP acceptance criteria (future delivery)
 

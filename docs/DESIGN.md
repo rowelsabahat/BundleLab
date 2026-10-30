@@ -6,13 +6,13 @@ Premium, calm commerce software with an original identity. Warm off-white canvas
 
 ## Foundation implemented
 
-Semantic CSS variables in `src/app/globals.css` drive Tailwind tokens and shadcn primitives. Use system sans-serif fonts for fast, network-independent rendering; use tabular numerals for future financial data. A static, responsive setup page establishes tone without suggesting working features. Light theme only for this MVP.
+Semantic CSS variables in `src/app/globals.css` drive Tailwind tokens and shadcn primitives. Use system sans-serif fonts for fast, network-independent rendering; use tabular numerals for future financial data. A responsive merchant shell, overview, product catalog, accessible dialogs, and planned-feature destinations establish the workspace. Local CSS product studies create cohesive decorative artwork without external assets. Light theme only for this MVP.
 
 ## Layout and typography
 
 Use a 4px spacing rhythm, 24–32px panel padding, 8–12px corner radii, and a maximum content width around 1200px. Body text 14–16px with comfortable line height; headings use restrained weight and tight tracking. Future desktop workspace: catalog and builder side by side with an adjacent or integrated profit summary. Below 768px stack sections in task order and keep actions reachable. Avoid horizontal page overflow at 375px.
 
-## Components and interaction (planned)
+## Components and interaction
 
 Use shadcn primitives for buttons, form controls, dialogs, cards, alerts, and tabs as needed. Primary forest buttons commit a meaningful action; secondary outlined buttons support review/editing. Destructive actions use explicit labels and red accents. Lucide icons accompany labels; decorative icons are hidden from assistive technology. No dead controls or sample dashboard metrics.
 

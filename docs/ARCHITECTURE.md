@@ -1,8 +1,16 @@
 # BundleLab architecture
 
-## Implemented foundation
+## Implemented milestone
 
-Next.js App Router under `src/app`, strict TypeScript, Tailwind CSS, shadcn/ui configuration and Button, Lucide, Zod, Vitest, and Playwright. `src/lib/utils.ts` holds the UI class helper. The only page is a static setup page. No catalog, domain schemas, calculation engine, persistence, API routes, or OpenAI client exists yet.
+Next.js App Router serves `/` (Overview), `/catalog`, and three informational planned pages at `/bundle-generator`, `/bundle-editor`, and `/listing-studio`. The root layout renders `AppShell`, with a persistent `CatalogProvider`. Server route components delegate interactive views to client components. Navigation uses Next Link and pathname-based active states. Mobile navigation becomes a horizontally scrollable bar.
+
+The 24-product JSON seed is parsed with Zod at module load. `schemas.ts` owns the strict Product schema and unique-ID list validator; the client provider restores separately stored imported products after mount. Product fields are integer cents, bounded stock, USD, tags, and a local artwork variant. Zero prices are allowed by the milestone request (overriding the initial proposed positive-price rule). Cost may exceed price; show the loss rather than reject valid merchant data. `calculations.ts` currently implements only estimated item gross margin, with null for zero revenue.
+
+`csv.ts` implements a bounded, dependency-free quoted CSV reader and row validation. Dollar strings convert to cents by splitting whole/fraction parts. Exact required headers may be reordered. Import is append-only and atomic: invalid rows, IDs colliding with current catalog or file, or cumulative limits reject the full file. No server upload occurs.
+
+`storage.ts` validates `{version: 1, products: [...]}` under `bundlelab:imported-products:v1`, rejects corrupt/unsupported data and seed collisions. Persist before updating in-memory products; failed writes leave the catalog unchanged. Invalid stored data is retained until explicit clear, with a recovery warning and import disabled. Clear requires confirmation. Separate tabs observe updates on reload, not via live synchronization. Saved bundles are not implemented.
+
+Radix Dialog provides trapping, Escape dismissal, semantics, and explicit focus restoration for product details, import, and clear confirmation. Artwork is decorative CSS with deterministic palettes/silhouettes; product names remain textual and no remote images are fetched. Route boundaries and catalog restoration have loading/error states. No API routes, model client, bundling engine, or generated content exists.
 
 ## Proposed module boundaries
 
@@ -16,11 +24,11 @@ Next.js App Router under `src/app`, strict TypeScript, Tailwind CSS, shadcn/ui c
 
 Server components render static structure and catalog context. Small client components own interactive drafts, storage, and copy actions. Use React state or a reducer for the active draft; derive financial results from inputs. Avoid Redux, global stores, and a generic repository layer. Read localStorage after mount to avoid hydration mismatch; never access it at module scope. Surface quota/security errors and do not imply cross-device storage.
 
-## Planned schemas
+## Schema boundaries (Product implemented; bundle and AI schemas planned)
 
 All objects are Zod-validated at trust boundaries; reject unknown properties for API inputs/outputs.
 
-- Product: `id`, `name`, `category` (skincare/wellness), `description`, `tags`, `priceCents`, `costCents`, `stock`, `currency: USD`. Amounts and stock are nonnegative safe integers; price positive. Seed costs must not exceed prices. No external images required.
+- Product: `id`, `name`, `category` (skincare/wellness), `description`, `tags`, `priceCents`, `costCents`, `stock`, `currency: USD`. Amounts and stock are nonnegative bounded integers; zero prices are supported, and imported costs can exceed prices. Seed costs do not exceed prices. Artwork is a local enum with a bottle default. No external images required.
 - BundleLine: `productId`, `quantity` (integer 1–99, limited by stock). Reject duplicates and unknown IDs. A bundle has 2–5 distinct lines.
 - BundleDraft: lines, `discountBps` (integer 0–5000), editable name and listing text. Cap text sizes.
 - SavedBundle: `id` (client UUID), `createdAt`, `updatedAt` (ISO strings), draft. Storage envelope `{version: 1, bundles: [...]}` under `bundlelab:saved-bundles:v1`. Revalidate catalog references and recompute derived values on load; never persist authoritative totals.
@@ -49,6 +57,6 @@ Use Node runtime and server-only environment access. Add the OpenAI SDK only whe
 
 ## Validation and deployment
 
-Vitest tests pure helpers now and domain logic later; Playwright exercises a production server in desktop and mobile Chromium. Future AI tests mock the provider and never require paid calls. Deploy using Vercel's standard Next.js preset, Node 24, npm install/build, and optional server environment variables. No filesystem writes or persistent server process assumptions. No custom Vercel config is currently necessary.
+Vitest tests catalog validation/search, item margin, CSV ingestion, and storage codecs; Playwright exercises a production server in desktop and mobile Chromium. Future AI tests mock the provider and never require paid calls. Deploy using Vercel's standard Next.js preset, Node 24, npm install/build, and optional server environment variables. No filesystem writes or persistent server process assumptions. No custom Vercel config is currently necessary.
 
 The npm dev/build scripts explicitly use Next.js Webpack and Tailwind PostCSS for portability; see decision 009.

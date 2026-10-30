@@ -2,12 +2,12 @@
 
 ## Product and scope
 
-Read README.md and docs/PRD.md, ARCHITECTURE.md, DESIGN.md, and DECISIONS.md before changing behavior. This is a polished portfolio MVP, not a production Shopify integration. Never fabricate customer research, production usage, sales metrics, or validated business impact. Persona and value statements are hypotheses. Current implementation is foundation only; update docs as capabilities ship.
+Read README.md and docs/PRD.md, ARCHITECTURE.md, DESIGN.md, and DECISIONS.md before changing behavior. This is a polished portfolio MVP, not a production Shopify integration. Never fabricate customer research, production usage, sales metrics, or validated business impact. Persona and value statements are hypotheses. Current implementation includes the dashboard/catalog and browser-local CSV import milestone; update docs as capabilities ship.
 
 ## Hard boundaries
 
 - No Shopify APIs, authentication, payments, or external database.
-- Future catalog: exactly 24 fictional skincare/wellness products, stable unique IDs, local JSON, explicit sample labels.
+- Seed catalog: exactly 24 fictional skincare/wellness products, stable unique IDs, local JSON, explicit sample labels.
 - All financial calculations must be pure deterministic TypeScript using integer cents and validated inputs. Follow documented rounding and gross-profit assumptions; test edge cases. No money arithmetic in model responses.
 - All recommendations must reference canonical existing product IDs; validate schemas and domain constraints before accepting AI output.
 - OpenAI calls belong only in server-side routes/server-only modules. Never expose secrets, log keys, or use NEXT_PUBLIC_ for credentials. No OpenAI implementation until requested.
