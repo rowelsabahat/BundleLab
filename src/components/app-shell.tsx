@@ -13,23 +13,31 @@ import {
 } from "lucide-react";
 import { CatalogProvider } from "./catalog-provider";
 const navigation = [
-  { href: "/", label: "Overview", icon: LayoutDashboard },
-  { href: "/catalog", label: "Catalog", icon: Package },
+  {
+    href: "/",
+    label: "Overview",
+    shortLabel: "Overview",
+    icon: LayoutDashboard,
+  },
+  { href: "/catalog", label: "Catalog", shortLabel: "Catalog", icon: Package },
   {
     href: "/bundle-generator",
     label: "Bundle Generator",
+    shortLabel: "Generator",
     icon: WandSparkles,
     planned: false,
   },
   {
     href: "/bundle-editor",
     label: "Bundle Editor",
+    shortLabel: "Editor",
     icon: SlidersHorizontal,
     planned: false,
   },
   {
     href: "/listing-studio",
     label: "Listing Studio",
+    shortLabel: "Listings",
     icon: FileText,
     planned: false,
   },
@@ -63,22 +71,30 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <p className="nav-label">WORKSPACE</p>
           <nav aria-label="Main navigation">
-            {navigation.map(({ href, label, icon: Icon, planned }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`nav-item ${pathname === href ? "active" : ""}`}
-                aria-current={pathname === href ? "page" : undefined}
-              >
-                <Icon size={18} strokeWidth={1.6} />
-                <span>{label}</span>
-                {planned && (
-                  <span className="nav-soon" aria-label="Planned">
-                    Soon
+            {navigation.map(
+              ({ href, label, shortLabel, icon: Icon, planned }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`nav-item ${pathname === href ? "active" : ""}`}
+                  aria-current={pathname === href ? "page" : undefined}
+                  aria-label={label}
+                >
+                  <Icon size={18} strokeWidth={1.6} aria-hidden="true" />
+                  <span className="nav-full-label" aria-hidden="true">
+                    {label}
                   </span>
-                )}
-              </Link>
-            ))}
+                  <span className="nav-short-label" aria-hidden="true">
+                    {shortLabel}
+                  </span>
+                  {planned && (
+                    <span className="nav-soon" aria-label="Planned">
+                      Soon
+                    </span>
+                  )}
+                </Link>
+              ),
+            )}
           </nav>
           <div className="sidebar-note">
             <span className="small-label">A LITTLE CONTEXT</span>

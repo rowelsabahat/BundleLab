@@ -1,4 +1,5 @@
 "use client";
+import { WorkspaceHeading } from "../workspace-heading";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -298,33 +299,29 @@ export function BundleEditor() {
         : "");
   return (
     <>
-      <div className="page-title-row">
-        <div>
-          <p className="eyebrow">MAKE THE COMBINATION YOURS</p>
-          <h1>
-            Bundle Editor<span className="heading-dot">.</span>
-          </h1>
-          <p className="page-subtitle">
-            A considered combination. Every change, clearly accounted for.
-          </p>
-        </div>
-        <div className="editor-top-actions">
-          <Button asChild variant="outline">
-            <Link href="/bundle-generator">
-              Find a pairing
-              <ArrowRight size={15} />
-            </Link>
-          </Button>
-          <Button
-            className="action-button"
-            disabled={!ready || blocked}
-            onClick={() => requestReplacement({ kind: "new" })}
-          >
-            <Plus size={16} />
-            New bundle
-          </Button>
-        </div>
-      </div>
+      <WorkspaceHeading
+        eyebrow="MAKE THE COMBINATION YOURS"
+        title="Bundle Editor"
+        description="A considered combination. Every change, clearly accounted for."
+        actions={
+          <div className="editor-top-actions">
+            <Button asChild variant="outline">
+              <Link href="/bundle-generator">
+                Find a pairing
+                <ArrowRight size={15} />
+              </Link>
+            </Button>
+            <Button
+              className="action-button"
+              disabled={!ready || blocked}
+              onClick={() => requestReplacement({ kind: "new" })}
+            >
+              <Plus size={16} />
+              New bundle
+            </Button>
+          </div>
+        }
+      />
       {catalogError && (
         <p role="alert" className="banner-error">
           {catalogError} Products from unreadable imports cannot be used until

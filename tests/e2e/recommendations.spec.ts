@@ -25,6 +25,7 @@ test("explicit Demo Mode produces valid cards and a persistent editable chosen b
       () => document.documentElement.scrollWidth <= window.innerWidth,
     ),
   ).toBe(true);
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: testInfo.outputPath("recommendations.png"),
     fullPage: true,

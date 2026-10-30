@@ -1,4 +1,5 @@
 "use client";
+import { WorkspaceHeading, GenerationModeBadge } from "../workspace-heading";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -371,25 +372,12 @@ export function ListingStudio({
   ) => editCopy({ ...copy, [field]: value });
   return (
     <>
-      <div className="page-title-row">
-        <div>
-          <p className="eyebrow">FROM COMBINATION TO COLLECTION</p>
-          <h1>
-            Listing Studio<span className="heading-dot">.</span>
-          </h1>
-          <p className="page-subtitle">
-            Give your bundle a story, with its facts and price intact.
-          </p>
-        </div>
-        <span className={`mode-badge ${mode === "ai" ? "mode-ai" : ""}`}>
-          <span className="status-dot" />
-          {mode === "ai"
-            ? "AI Mode · OpenAI"
-            : mode === "demo"
-              ? "Demo Mode · Simulated"
-              : "Mode not configured"}
-        </span>
-      </div>
+      <WorkspaceHeading
+        eyebrow="FROM COMBINATION TO COLLECTION"
+        title="Listing Studio"
+        description="Give your bundle a story, with its facts and price intact."
+        actions={<GenerationModeBadge mode={mode} />}
+      />
       {!ready ? (
         <div className="route-loading" role="status">
           Restoring your selected bundle and copy…

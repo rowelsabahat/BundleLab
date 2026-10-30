@@ -117,3 +117,11 @@ Accepted, 2026-10-30. Recheck returned recommendation constraints, status, disti
 ## 029 — Reproducible portfolio QA without paid service dependencies
 
 Accepted, 2026-10-30. Extend the existing complete Demo browser workflow with stale-tab, draft-preservation, malformed-response, keyboard-only focus and targeted supporting-text contrast regressions. Use deterministic Demo server configuration and isolated contexts; mock paid AI transport in unit/API tests. CI runs the full browser suite, retains failure diagnostics, limits workers and has an explicit timeout. Live OpenAI, deployed Vercel behavior, other browser engines and complete assistive-technology conformance remain separately disclosed checks, not implied test passes. See QA.md for this run's evidence. Error classification reference: [official OpenAI error codes](https://developers.openai.com/api/docs/guides/error-codes).
+
+## 030 — Refine the existing commerce language through shared presentation primitives
+
+Accepted, 2026-10-30. Retain local botanical product artwork, system sans typography and restrained serif collection titles. Extract a shared workspace heading and generation mode badge; introduce a small reusable CSS type/surface/radius/shadow/motion system, replace repetitive literal styling and remove superseded exact-selector declarations. Use charcoal for content, green for actions/selections/economic emphasis, and a consistent muted foreground for metadata. This avoids new font/image dependencies or business-logic changes.
+
+## 031 — Visible workflow navigation and readable phone cards
+
+Accepted, 2026-10-30. At widths below 1024px, use a five-destination top navigation with compact visible labels and full accessible names. Keep all stages discoverable without horizontal scrolling. Stack the editor at this breakpoint; use single-column catalog cards below 480px and at least 44px main buttons. Verify 1440/1024/820/375px workflow captures in both Chromium projects, plus targeted contrast and keyboard regressions. These checks do not replace Safari, real touch hardware, zoom or screen-reader review.

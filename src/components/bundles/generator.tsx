@@ -1,4 +1,5 @@
 "use client";
+import { WorkspaceHeading, GenerationModeBadge } from "../workspace-heading";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -173,25 +174,12 @@ export function Generator({
   }
   return (
     <>
-      <div className="page-title-row">
-        <div>
-          <p className="eyebrow">GOOD PRODUCTS. A SHARED PURPOSE.</p>
-          <h1>
-            Bundle Generator<span className="heading-dot">.</span>
-          </h1>
-          <p className="page-subtitle">
-            Start with an idea. Find a combination worth considering.
-          </p>
-        </div>
-        <span className={`mode-badge ${mode === "ai" ? "mode-ai" : ""}`}>
-          <span className="status-dot" />
-          {mode === "ai"
-            ? "AI Mode · OpenAI"
-            : mode === "demo"
-              ? "Demo Mode · Simulated"
-              : "Mode not configured"}
-        </span>
-      </div>
+      <WorkspaceHeading
+        eyebrow="GOOD PRODUCTS. A SHARED PURPOSE."
+        title="Bundle Generator"
+        description="Start with an idea. Find a combination worth considering."
+        actions={<GenerationModeBadge mode={mode} />}
+      />
       <div className="mode-explainer">
         <Layers3 size={19} />
         <p>
@@ -200,8 +188,8 @@ export function Generator({
             : mode === "ai"
               ? "Product selections and explanations come from OpenAI. Financial figures are calculated and validated by BundleLab. "
               : "Set BUNDLELAB_MODE to demo or ai in the server environment. "}
-          <strong>Both modes use the same 24 sample products.</strong> CSV
-          imports are catalog-only for now.
+          <strong>Both modes use the same 24 sample products.</strong> Add
+          imported products when you customize in the Editor.
         </p>
       </div>
       {blocked && (

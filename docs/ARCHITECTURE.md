@@ -111,3 +111,7 @@ The npm dev/build scripts explicitly use Next.js Webpack and Tailwind PostCSS fo
 ## Pre-launch QA
 
 See QA.md for executed checks and limitations. CI explicitly selects Demo Mode with an empty API key, runs formatting/lint/typecheck/unit/build and the complete desktop/mobile Chromium suite, limits CI browser concurrency to two workers and retains traces/screenshots/HTML reports on failure for seven days. Local browser tests start a separate production server on port 3100 and use isolated browser contexts. No production browser storage is touched.
+
+## Shared visual primitives
+
+`components/workspace-heading.tsx` supplies the reusable page heading and explicit mode badge to client views. It accepts display props/actions only. `globals.css` owns the semantic type/surface/control tokens and responsive shell/card/field rules; all five destinations remain visible below 1024px through short visual labels with unchanged full accessible link names. This visual layer does not alter product authority, financial calculations, AI generation or persistence contracts.

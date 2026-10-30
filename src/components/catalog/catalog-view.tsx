@@ -1,4 +1,5 @@
 "use client";
+import { WorkspaceHeading } from "../workspace-heading";
 import { useState } from "react";
 import {
   Search,
@@ -46,25 +47,21 @@ export function CatalogView() {
   };
   return (
     <>
-      <div className="page-title-row">
-        <div>
-          <p className="eyebrow">YOUR MERCHANDISING FOUNDATION</p>
-          <h1>
-            Product catalog<span className="heading-dot">.</span>
-          </h1>
-          <p className="page-subtitle">
-            Good bundles begin with knowing your products.
-          </p>
-        </div>
-        <Button
-          className="action-button"
-          onClick={() => setImportOpen(true)}
-          disabled={!ready || !!storageError}
-        >
-          <Upload size={16} />
-          Import products
-        </Button>
-      </div>
+      <WorkspaceHeading
+        eyebrow="YOUR MERCHANDISING FOUNDATION"
+        title="Product catalog"
+        description="Good bundles begin with knowing your products."
+        actions={
+          <Button
+            className="action-button"
+            onClick={() => setImportOpen(true)}
+            disabled={!ready || !!storageError}
+          >
+            <Upload size={16} />
+            Import products
+          </Button>
+        }
+      />
       <div className="catalog-intro">
         <span className="status-dot" />
         <p>

@@ -183,3 +183,7 @@ The npm dev/build scripts explicitly use Next.js Webpack and Tailwind PostCSS fo
 The QA pass adds regression coverage for stale-tab imports, active incomplete inputs during unrelated deletion, response constraint verification, exact JSON media types, timeout classification, keyboard focus and selected essential text contrast. Catalog imports/clears now refuse stale-tab overwrites; reload before continuing in that tab. No live cross-tab merge or synchronization is implied.
 
 GitHub Actions uses Node 24, npm ci, formatting, lint, typecheck, unit tests, production build and the full desktop/mobile Chromium suite. It explicitly selects Demo Mode with no API key, installs Chromium system dependencies and retains browser failure diagnostics for seven days. See [docs/QA.md](docs/QA.md) for actual local results and checks still requiring manual verification. No remote CI or deployment success is implied by local checks.
+
+## Portfolio visual refinement
+
+The interface now shares heading/mode components, a restrained type/surface/control token system, more readable charcoal product information and consistent card/field treatments. Generator economics and Editor pricing have clearer hierarchy; phone product rows/cards and five-step tablet/mobile navigation are easier to scan. Existing product artwork, calculations, API boundaries and storage behavior are preserved. See [docs/DESIGN.md](docs/DESIGN.md) for decisions and [docs/QA.md](docs/QA.md) for viewport checks and remaining manual review.

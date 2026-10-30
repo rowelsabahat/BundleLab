@@ -91,3 +91,21 @@ Use a separate browser profile/private window for destructive recovery tests. Ke
 - localStorage is browser-local and not a backup. Other tabs refresh on reload; guards prevent ordinary stale writes but are not transactional compare-and-swap across truly simultaneous browser operations. No merge/sync or cross-device durability is claimed.
 - Instance-local request/concurrency/hourly limits are not distributed abuse prevention or a global spending cap. A public paid AI deployment still needs hosting controls and provider project budgets.
 - Imports are merchant-provided source data, not independently verified claims. No Shopify publishing, checkout, authentication, payments or database is included.
+
+## Portfolio visual refinement follow-up — 2026-10-30
+
+This section records the later visual milestone; the 40-test results above belong to the preceding functional audit.
+
+Before editing, eight existing desktop/mobile workflow tests were executed against a production Demo build and their screenshots inspected. The review identified small working text, excessive green text shades, off-screen mobile navigation, narrow phone catalog cards and inconsistent control proportions. After refinement, screenshots at 1440, 1024, 820 and 375px were captured and inspected across the workspace. A final phone Overview review exposed cropped decorative products; their positions were corrected and a rendered-bounds regression added.
+
+Current checks after visual changes:
+
+- `npm run lint`, `npm run typecheck`, `npm test` and `npm run build`: passed; 123 unit/API tests across 10 files.
+- `npm run format:check` and `git diff --check`: passed.
+- `npm run test:e2e`: 48 passed, including the existing merchant workflow and four added viewport scenarios in each Chromium project. The targeted contrast suite remains green.
+- New layout checks exercise five visible navigation destinations below 1024px, 44px main button height, page/drawer overflow, focus restoration, the Catalog → Generator → Editor → Studio handoff and phone pending/cancel/retry. At 375px, decorative Overview products must fit inside their artwork surface.
+- No paid AI request, new external image/font dependency, calculation change or persistence migration was introduced. All new browser data stays in isolated test contexts.
+
+Implementation files: `src/app/globals.css`; shared `components/workspace-heading.tsx`; `app-shell.tsx`; Dashboard, Catalog, Generator, Editor and Listing Studio view components; `tests/e2e/design.spec.ts` and the Generator screenshot setup in `recommendations.spec.ts`. Design, architecture, decisions and README documentation describe the actual shared presentation layer.
+
+Manual visual review still required: real iOS Safari and Android touch behavior, browser text enlargement/200% zoom, screen readers, all hover/disabled/error color combinations and deployed asset rendering. The tests measure selected contrast/text surfaces and layout bounds; screenshots are review artifacts, not a universal pixel-diff baseline or proof of complete WCAG conformance. Confirm the one-column phone catalog, mobile navigation labels, Editor control grouping and chosen type scale suit your portfolio presentation.

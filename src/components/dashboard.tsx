@@ -1,4 +1,5 @@
 "use client";
+import { WorkspaceHeading } from "./workspace-heading";
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -47,21 +48,17 @@ export function Dashboard() {
   ];
   return (
     <>
-      <div className="page-title-row">
-        <div>
-          <p className="eyebrow">A FRESH PERSPECTIVE ON YOUR CATALOG</p>
-          <h1>
-            A little more possibility<span className="heading-dot">.</span>
-          </h1>
-          <p className="page-subtitle">
-            Your products, considered together. Welcome to your workspace.
-          </p>
-        </div>
-        <span className="workspace-pill">
-          <span className="status-dot" />
-          Demo workspace
-        </span>
-      </div>
+      <WorkspaceHeading
+        eyebrow="A FRESH PERSPECTIVE ON YOUR CATALOG"
+        title="A little more possibility"
+        description="Your products, considered together. Welcome to your workspace."
+        actions={
+          <span className="workspace-pill">
+            <span className="status-dot" />
+            Demo workspace
+          </span>
+        }
+      />
       {storageError && (
         <div role="alert" className="banner-error">
           {storageError}{" "}

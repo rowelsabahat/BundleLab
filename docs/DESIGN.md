@@ -6,11 +6,11 @@ Premium, calm commerce software with an original identity. Warm off-white canvas
 
 ## Foundation implemented
 
-Semantic CSS variables in `src/app/globals.css` drive Tailwind tokens and shadcn primitives. Use system sans-serif fonts for fast, network-independent rendering; use tabular numerals for future financial data. A responsive merchant shell, overview, product catalog, accessible dialogs, and functional Generator, Editor and Listing Studio destinations establish the workspace. Local CSS product studies create cohesive decorative artwork without external assets. Light theme only for this MVP.
+Semantic CSS variables in `src/app/globals.css` drive Tailwind tokens and shadcn primitives. Use system sans-serif fonts for fast, network-independent rendering; use tabular numerals for financial data. A responsive merchant shell, overview, product catalog, accessible dialogs, and functional Generator, Editor and Listing Studio destinations establish the workspace. Local CSS product studies create cohesive decorative artwork without external assets. Light theme only for this MVP.
 
 ## Layout and typography
 
-Use a 4px spacing rhythm, 24–32px panel padding, 8–12px corner radii, and a maximum content width around 1200px. Body text 14–16px with comfortable line height; headings use restrained weight and tight tracking. Future desktop workspace: catalog and builder side by side with an adjacent or integrated profit summary. Below 768px stack sections in task order and keep actions reachable. Avoid horizontal page overflow at 375px.
+Use a 4px spacing rhythm, 24–32px panel padding, 8–12px corner radii, and a maximum content width around 1200px. Body text 14–16px with comfortable line height; headings use restrained weight and tight tracking. Desktop editor: product canvas beside the economics summary. Below 1024px, the shell becomes a compact top navigation and the editor stacks in task order. Below 480px, catalog cards use one full-width column. Avoid horizontal page overflow at 375px.
 
 ## Components and interaction
 
@@ -37,3 +37,17 @@ Use an editorial two-column workspace: editable copy on the left, a restrained s
 ## QA readability guardrail
 
 Supporting catalog, constraint, editor and listing text uses the muted foreground token instead of pale decorative greens. Browser regressions measure selected essential supporting text against its opaque surface at a minimum 4.5:1 contrast in desktop and mobile Chromium. Decorative artwork remains separate; this limited check is not a complete WCAG conformance audit.
+
+## Portfolio refinement pass — 2026-10-30
+
+The before screenshots showed overly small text, too many green text shades, narrow phone catalog cards, clipped off-screen navigation destinations and inconsistent control proportions. The refinement keeps the original botanical artwork and commerce workflow while improving legibility and hierarchy.
+
+- `WorkspaceHeading` provides one title/eyebrow/description/action composition across all five screens. `GenerationModeBadge` consistently labels server-selected Demo/AI modes in Generator and Studio. These are presentation components; they do not own request or financial state.
+- Shared CSS tokens define captions (12px), labels (13px), body (14px), base text (15px), raised/subtle/input surfaces, panel/control radii, restrained shadows and 160ms control transitions. Overlines and decorative packaging remain smaller. Charcoal carries product information; forest green identifies primary actions, selection and sale price. Metadata uses the muted foreground.
+- Cards share borders, radii and elevation. Product art remains locally rendered and decorative. Catalog cards have more readable names/descriptions, considered image proportions and consistent retail/cost/margin hierarchy. Phone cards use one column; compact list view remains available.
+- Generator uses a focused brief panel, clear optional guardrails, understated mode chips and comparable recommendation cards. Selected products stay canonical; price is the principal economic value, with profit and margin distinct beneath it.
+- Editor rows separate product information from quantity/removal controls on phones. Pricing inputs align, exact sale price is prominent, guardrails stay separate, and the primary Save action centers its icon and label. Listing authoring inherits the same field/control system.
+- Primary/secondary buttons have at least 44px height. Tablet/mobile navigation presents all five destinations without horizontal scrolling, with compact visible labels and full accessible names. Mobile text-entry fields use 16px text to avoid focus zoom on iOS; real-device verification remains required.
+- Empty states use quiet inset surfaces, feedback uses consistent corner/line-height treatment, focus rings remain explicit, and reduced-motion preferences remove the small hover transitions. No artificial generation delay, new imagery service, charts or invented product evidence were added.
+
+Repeated exact-selector declarations superseded by the final rules were removed during stylesheet consolidation. Existing quantity, pricing, API, validation and localStorage logic is unchanged. Browser layout checks cover 1440, 1024, 820 and 375px widths, including navigation reachability, primary control size, drawer focus/overflow, workflow continuity and the mobile pending/cancel state. See QA.md for executed results and manual limits.
