@@ -70,7 +70,7 @@ On Linux/CI use `npx playwright install --with-deps chromium`. Browser tests alw
 
 Use a separate browser profile/private window for destructive recovery tests. Keep source CSV/export copies; do not clear your real working data just to run this checklist.
 
-1. Start `npm run dev`; open http://localhost:3000. Confirm fictional catalog/USD labels, 24 sample products and working links to every tool. Repeat at 375px width; check scrolling and reachable actions.
+1. Start `npm run dev`; open http://localhost:3000. Confirm product catalog/USD labels, 24 sample products and working links to every tool. Repeat at 375px width; check scrolling and reachable actions.
 2. In Catalog, search `BL-001`, filter Wellness then reset, sort by price/name and switch list/grid. Open Dewdrop Gel Cleanser: $24.00 retail, $8.20 unit cost, 65.8% estimated margin. Use Tab/Shift+Tab inside the dialog, Escape, and verify focus returns to the product.
 3. Download the CSV template and import it in the disposable profile. Expect two imports after reload. Try a duplicate ID, negative price, fractional stock and missing column: row errors and no partial additions. Open a second tab, import another unique product there, then attempt an import in the stale first tab: expect a reload warning and retain the second tab's data.
 4. Confirm **Demo Mode · Simulated** in Generator. Submit “Create a skincare starter kit under $80 with at least a 35% gross margin.” Results must have canonical products, sale price no more than $79.99 and margin at least 35%. A $0.01 maximum must give truthful infeasibility. Change controls: previous results should clear.

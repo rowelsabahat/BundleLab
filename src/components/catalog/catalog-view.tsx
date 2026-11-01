@@ -65,7 +65,7 @@ export function CatalogView() {
       <div className="catalog-intro">
         <span className="status-dot" />
         <p>
-          <strong>24 fictional products to explore.</strong> Make this workspace
+          <strong>24 sample products to explore.</strong> Make this workspace
           your own by importing a CSV.
         </p>
         <span className="catalog-count">

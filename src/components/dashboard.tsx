@@ -98,7 +98,7 @@ export function Dashboard() {
             </Link>
           </Button>
           <span className="feature-footnote">
-            Fictional products. Real product economics.
+            Good products. Clear economics.
           </span>
         </div>
         <div className="feature-art" aria-hidden="true">

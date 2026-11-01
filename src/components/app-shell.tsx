@@ -66,7 +66,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </span>
             <div>
               <strong>Botanical & Co.</strong>
-              <span>Fictional merchant workspace</span>
+              <span>Merchant workspace</span>
             </div>
           </div>
           <p className="nav-label">WORKSPACE</p>
@@ -124,7 +124,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
             <span className="demo-badge">
               <span />
-              Fictional catalog · USD
+              Product catalog · USD
             </span>
           </header>
           <main id="main-content" tabIndex={-1} className="page-content">
