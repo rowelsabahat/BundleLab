@@ -2,7 +2,7 @@
 
 Thoughtful product bundles, transparent economics, and listing copy in one merchant workflow.
 
-BundleLab is a portfolio MVP exploring how small e-commerce merchants can move from a product catalog to a considered bundle and an editable listing. It combines real server-side AI with deterministic financial validation. A clearly labeled, key-free Demo Mode makes the entire workflow reviewable without paid services.
+BundleLab is an MVP exploring how small e-commerce merchants can move from a product catalog to a considered bundle and an editable listing. It combines real server-side AI with deterministic financial validation. A clearly labeled, key-free Demo Mode makes the entire workflow reviewable without paid services.
 
 **Status:** MVP v1.0.0 · Editorial interface finalized · deployment pending.
 
