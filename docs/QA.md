@@ -142,6 +142,14 @@ Executed on Node 24.14.1:
 
 The full suite covers Catalog search/filter/details/import, explicit generation modes and infeasibility, financial editing, named library operations, Listing Studio editing/preview/clipboard/JSON, persistence/recovery, stale-tab protections, selected contrast, keyboard focus and viewport bounds. It does not exercise paid OpenAI calls or production Vercel behavior. See the manual checklist above and DEPLOYMENT.md before launch.
 
-Remaining release steps: review the refreshed screenshots, confirm public GitHub visibility deliberately, approve/connect/deploy on Vercel in Demo Mode, record the actual URL and run the manual workflow against that deployment. A successful Git push is not a public-visibility or deployment claim. Remote CI results must be checked separately.
+Remaining release steps at the initial gate: review the refreshed screenshots, confirm public GitHub visibility deliberately, approve/connect/deploy on Vercel in Demo Mode, record the actual URL and run the manual workflow against that deployment. A successful Git push is not a public-visibility or deployment claim. Remote CI results must be checked separately.
 
 Release documentation checks: `npm run format:check` passed. `git diff --check` initially reported Markdown hard-break spaces in README; replacing them with paragraph breaks removed the issue. A separate one-test Chromium capture run passed and refreshed all four PRD screenshots from the final interface; the temporary capture script was removed afterward. All four resulting screenshots were visually inspected.
+
+### Verified publication and remote CI
+
+After the owner explicitly approved public visibility, GitHub confirmed `private: false` for [rowelsabahat/BundleLab](https://github.com/rowelsabahat/BundleLab). Release commit `9caa5c8531f259ed8ca06bc8d7a8e8636d1ca0f2` was pushed normally; GitHub main matched it exactly at verification. The final committed audit covered 99 tracked paths and 360 reachable Git objects, with no forbidden tracked files or credential matches. The working tree was clean.
+
+[GitHub Actions release run 41359377916](https://github.com/rowelsabahat/BundleLab/actions/runs/41359377916) completed successfully: clean `npm ci`, formatting, lint, typecheck, unit tests, production build, Chromium installation and the full Playwright suite. This establishes an executed hosted CI pass for that code commit. The subsequent publication-evidence documentation update is formatting/diff checked and intentionally skips a redundant CI run; application code and workflow are unchanged.
+
+Public visibility is complete. Vercel connection, deployment approval, deployment URL and deployed-browser verification remain pending. No Vercel deployment was performed.

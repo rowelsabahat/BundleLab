@@ -6,6 +6,8 @@ BundleLab is a portfolio MVP exploring how small e-commerce merchants can move f
 
 **Status:** MVP v1.0.0 · Editorial interface finalized · deployment pending.
 
+**Repository:** [rowelsabahat/BundleLab](https://github.com/rowelsabahat/BundleLab) · public
+
 **Live demo:** Pending deployment — replace with the verified Vercel URL.
 
 **License:** [MIT](LICENSE). No customer research, production usage or revenue impact is claimed.
