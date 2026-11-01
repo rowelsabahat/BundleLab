@@ -109,3 +109,19 @@ Current checks after visual changes:
 Implementation files: `src/app/globals.css`; shared `components/workspace-heading.tsx`; `app-shell.tsx`; Dashboard, Catalog, Generator, Editor and Listing Studio view components; `tests/e2e/design.spec.ts` and the Generator screenshot setup in `recommendations.spec.ts`. Design, architecture, decisions and README documentation describe the actual shared presentation layer.
 
 Manual visual review still required: real iOS Safari and Android touch behavior, browser text enlargement/200% zoom, screen readers, all hover/disabled/error color combinations and deployed asset rendering. The tests measure selected contrast/text surfaces and layout bounds; screenshots are review artifacts, not a universal pixel-diff baseline or proof of complete WCAG conformance. Confirm the one-column phone catalog, mobile navigation labels, Editor control grouping and chosen type scale suit your portfolio presentation.
+
+## Reversible editorial design experiment — 2026-10-31
+
+The current MVP was first saved at Git checkpoint `3b6d2f0`, including the latest removal of visible “fictional” wording. An additive, scoped editorial stylesheet and an independent appearance control allow comparing the reference-inspired design with Original on every route. No business-data keys or calculations were changed.
+
+Executed verification for this experiment:
+
+- Lint, strict typecheck, all 123 unit/API tests, production build, formatting and diff checks passed.
+- The targeted desktop/mobile layout and contrast run passed 10 tests at 1440, 1024, 820 and 375px.
+- The final complete Demo browser suite passed 52 tests across desktop and mobile Chromium. This includes appearance reversal/persistence, switching with unsaved editor inputs and edited listing copy, exact comparison of stored business envelopes before/after switching, successful original-layout generation/export readiness, and invalid/blocked appearance storage.
+- The first full browser run passed 51/52. One new mobile test used an unscoped CSS selector that also matched a hidden duplicate wordmark. Scoping the assertion to the active main landmark fixed the test; no failed run is counted as a passing run.
+- Actual screenshots of Overview, Catalog, Generator, Editor and generated Listing Studio were inspected. The original palette and local product artwork remain in use. No paid AI call, external image generation or credential access was needed.
+
+To compare manually, refresh http://localhost:3000 and use **Design preview → Editorial / Original** in the header. Switch while editing a bundle or listing, navigate across all five destinations, reload and verify the chosen appearance and current copy restore. The comparison control remains visible in Original. Test Escape/focus return in product details and the picker, examine the forest prompt panel, and check the phone's stacked opening composition. Original restores the old workspace without Git commands or clearing browser data.
+
+Only `bundlelab:design-preview:v1` holds the appearance preference. Storage denial keeps the switch functional in memory with explicit feedback. A restored Original preference may briefly show the default Editorial layout before client hydration; this is a local preview preference rather than a server account setting. Real Safari/touch hardware, complete accessibility/zoom testing and remote deployment remain manual checks. The Git checkpoint is a source backup; it does not contain or erase browser-local merchant data.

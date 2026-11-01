@@ -12,6 +12,7 @@ import {
   Leaf,
 } from "lucide-react";
 import { CatalogProvider } from "./catalog-provider";
+import { DesignPreviewControl, useDesignPreview } from "./design-preview";
 const navigation = [
   {
     href: "/",
@@ -45,12 +46,13 @@ const navigation = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const active = navigation.find((n) => n.href === pathname);
+  const { design, chooseDesign, notice } = useDesignPreview();
   return (
     <CatalogProvider>
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
-      <div className="app-shell">
+      <div className={`app-shell design-${design}`} data-design={design}>
         <aside className="sidebar">
           <Link href="/" className="brand" aria-label="BundleLab overview">
             <span className="brand-mark">
@@ -126,6 +128,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <span />
               Product catalog · USD
             </span>
+            <DesignPreviewControl
+              design={design}
+              onChange={chooseDesign}
+              notice={notice}
+            />
           </header>
           <main id="main-content" tabIndex={-1} className="page-content">
             {children}

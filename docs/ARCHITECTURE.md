@@ -115,3 +115,9 @@ See QA.md for executed checks and limitations. CI explicitly selects Demo Mode w
 ## Shared visual primitives
 
 `components/workspace-heading.tsx` supplies the reusable page heading and explicit mode badge to client views. It accepts display props/actions only. `globals.css` owns the semantic type/surface/control tokens and responsive shell/card/field rules; all five destinations remain visible below 1024px through short visual labels with unchanged full accessible link names. This visual layer does not alter product authority, financial calculations, AI generation or persistence contracts.
+
+## Reversible design comparison
+
+AppShell's useDesignPreview hook restores a literal editorial/original preference from `bundlelab:design-preview:v1` after hydration. Invalid values are ignored, storage errors do not block the in-memory switch, and preference writes never touch any business-data storage key. The shell keeps the same React child tree while changing its design class, preserving in-progress forms. DesignPreviewControl is available on every page. Both appearances reuse identical catalog, financial, generation, editor and listing logic.
+
+layout.tsx imports an additive editorial.css; globals.css remains the original visual implementation. New Overview wordmark/spotlight markup is hidden in Original mode. The spotlight uses the existing catalog product and detail interaction. No new API, external media/font service, financial calculation or catalog authority is introduced.

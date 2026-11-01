@@ -80,6 +80,9 @@ export function Dashboard() {
         ))}
       </section>
       <section className="overview-feature">
+        <span className="editorial-wordmark" aria-hidden="true">
+          BundleLab
+        </span>
         <div className="feature-copy">
           <span className="feature-kicker">THE START OF SOMETHING GOOD</span>
           <h2>
@@ -119,6 +122,20 @@ export function Dashboard() {
             <i>Thoughtfully paired.</i>
           </span>
         </div>
+        <button
+          className="editorial-spotlight"
+          aria-label={`View ${products[3].name}`}
+          onClick={() => setSelected(products[3])}
+        >
+          <span className="editorial-spotlight-heading">
+            FROM THE COLLECTION <ArrowUpRight size={20} aria-hidden="true" />
+          </span>
+          <ProductArt product={products[3]} />
+          <span className="editorial-spotlight-name">{products[3].name}</span>
+          <span className="editorial-spotlight-price">
+            {money(products[3].priceCents)} <small>USD</small>
+          </span>
+        </button>
       </section>
       <div className="overview-columns">
         <section className="panel mix-panel">

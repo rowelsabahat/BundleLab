@@ -187,3 +187,9 @@ GitHub Actions uses Node 24, npm ci, formatting, lint, typecheck, unit tests, pr
 ## Portfolio visual refinement
 
 The interface now shares heading/mode components, a restrained type/surface/control token system, more readable charcoal product information and consistent card/field treatments. Generator economics and Editor pricing have clearer hierarchy; phone product rows/cards and five-step tablet/mobile navigation are easier to scan. Existing product artwork, calculations, API boundaries and storage behavior are preserved. See [docs/DESIGN.md](docs/DESIGN.md) for decisions and [docs/QA.md](docs/QA.md) for viewport checks and remaining manual review.
+
+## Try the editorial design experiment
+
+Refresh the running app and use **Design preview** in the header to compare **Editorial** with **Original**. Editorial is the default for a browser with no saved design preference. Original restores the previous workspace styling; the comparison control stays available. Your choice is remembered locally when browser storage is available. Switching designs keeps current form edits, bundles, catalog imports and listing copy intact.
+
+The prior complete MVP is also saved at Git checkpoint `3b6d2f0`, including the latest visible-copy changes. The new layout is isolated in src/app/editorial.css. No reset, checkout or browser-data deletion is needed to go back: choose **Original**. See docs/DESIGN.md for the reference interpretation and technical limits.

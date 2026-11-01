@@ -125,3 +125,11 @@ Accepted, 2026-10-30. Retain local botanical product artwork, system sans typogr
 ## 031 — Visible workflow navigation and readable phone cards
 
 Accepted, 2026-10-30. At widths below 1024px, use a five-destination top navigation with compact visible labels and full accessible names. Keep all stages discoverable without horizontal scrolling. Stack the editor at this breakpoint; use single-column catalog cards below 480px and at least 44px main buttons. Verify 1440/1024/820/375px workflow captures in both Chromium projects, plus targeted contrast and keyboard regressions. These checks do not replace Safari, real touch hardware, zoom or screen-reader review.
+
+## 032 — Compare an editorial design without sacrificing the current MVP
+
+Accepted, 2026-10-31, at the user's request. Preserve the current source at `3b6d2f0` and add an independent Editorial/Original appearance switch. Scope the experiment's CSS so the original workspace remains available without reverting files. Store only a validated literal appearance preference, with in-memory operation when storage is unavailable. Do not remount routed views or mutate business storage during switching. The original comparison toolbar is the only intentional addition to the restored layout.
+
+## 033 — Translate the reference's composition into BundleLab's visual language
+
+Accepted, 2026-10-31. Borrow oversized typography, grid lines, product layering and a confident editorial layout; retain the existing forest/off-white/charcoal palette and local botanical artwork. Use a canonical product spotlight rather than the reference's portrait, jewelry or unverifiable awards. Carry the grid, flat surfaces, heading hierarchy and top navigation through all five pages and portalled dialogs. Test both reversal and the complete Demo workflow; paid AI behavior is unchanged.
