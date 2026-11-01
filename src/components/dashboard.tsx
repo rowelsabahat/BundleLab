@@ -91,8 +91,8 @@ export function Dashboard() {
             great combination.
           </h2>
           <p>
-            Explore a considered collection of skincare and wellness essentials.
-            Get to know the products before building the bundles.
+            Explore a considered collection of your products. Get to know your
+            catalog before building the bundles.
           </p>
           <Button asChild className="action-button">
             <Link href="/catalog">
@@ -105,7 +105,7 @@ export function Dashboard() {
           </span>
         </div>
         <div className="feature-art" aria-hidden="true">
-          <span className="art-caption">THE DAILY RITUAL COLLECTION</span>
+          <span className="art-caption">THE CONSIDERED COLLECTION</span>
           <div className="feature-circle" />
           <div className="hero-product hero-one">
             <ProductArt product={products[3]} />
@@ -117,7 +117,7 @@ export function Dashboard() {
             <ProductArt product={products[0]} />
           </div>
           <span className="art-signature">
-            Small rituals.
+            Good products.
             <br />
             <i>Thoughtfully paired.</i>
           </span>

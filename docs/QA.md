@@ -110,7 +110,9 @@ Implementation files: `src/app/globals.css`; shared `components/workspace-headin
 
 Manual visual review still required: real iOS Safari and Android touch behavior, browser text enlargement/200% zoom, screen readers, all hover/disabled/error color combinations and deployed asset rendering. The tests measure selected contrast/text surfaces and layout bounds; screenshots are review artifacts, not a universal pixel-diff baseline or proof of complete WCAG conformance. Confirm the one-column phone catalog, mobile navigation labels, Editor control grouping and chosen type scale suit your portfolio presentation.
 
-## Reversible editorial design experiment — 2026-10-31
+## Historical reversible editorial design experiment — 2026-10-31
+
+Historical evidence only: the comparison UI described below was retired for v1.0.0; the release section supersedes these comparison instructions.
 
 The current MVP was first saved at Git checkpoint `3b6d2f0`, including the latest removal of visible “fictional” wording. An additive, scoped editorial stylesheet and an independent appearance control allow comparing the reference-inspired design with Original on every route. No business-data keys or calculations were changed.
 
@@ -125,3 +127,21 @@ Executed verification for this experiment:
 To compare manually, refresh http://localhost:3000 and use **Design preview → Editorial / Original** in the header. Switch while editing a bundle or listing, navigate across all five destinations, reload and verify the chosen appearance and current copy restore. The comparison control remains visible in Original. Test Escape/focus return in product details and the picker, examine the forest prompt panel, and check the phone's stacked opening composition. Original restores the old workspace without Git commands or clearing browser data.
 
 Only `bundlelab:design-preview:v1` holds the appearance preference. Storage denial keeps the switch functional in memory with explicit feedback. A restored Original preference may briefly show the default Editorial layout before client hydration; this is a local preview preference rather than a server account setting. Real Safari/touch hardware, complete accessibility/zoom testing and remote deployment remain manual checks. The Git checkpoint is a source backup; it does not contain or erase browser-local merchant data.
+
+## MVP v1.0.0 release gate — 2026-11-01
+
+Editorial is now the sole application appearance. The preview component, labels, appearance controls and preference reads were removed; the old preference remains harmless in browser storage. No financial functions, catalog authority, merchant storage envelope or business behavior was changed in this release preparation. Earlier generic merchant-positioning changes are included.
+
+Executed on Node 24.14.1:
+
+- `npm run check`: passed lint, strict route/type generation, all **123 unit/API tests across 10 files**, and the production Webpack build. API calls were mocked in unit tests.
+- `npm run test:e2e`: **50 passed**, desktop and mobile Chromium, using an isolated production Demo server with an empty API key. The old four appearance-switch cases were replaced by two cross-route release cases (one per project), so the count differs from the historical 52-test experiment. The new regression confirms every route stays Editorial despite a legacy Original preference, exposes no comparison buttons and does not clear the stored preference.
+- `npm audit --omit=dev --json`: zero reported runtime vulnerabilities at execution time; this is an advisory snapshot, not proof of security.
+- Repository hygiene audit: 93 previously tracked paths and 328 reachable Git objects examined before staging. No tracked secret/environment files (apart from `.env.example`), dependency/build/test artifacts, credential-pattern matches or exact local API-key matches were found in history, current source or browser static assets. `.env.local` is ignored. The scanner emits paths/counts only, never secret values; detection is bounded to known patterns and the configured local key.
+- GitHub authenticated metadata: repository is **private**, default branch `main`, authenticated push access available. No recorded deployments, commit statuses or repository webhooks were returned. The local Vercel CLI and project link are absent; no Vercel deployment/settings change was performed.
+
+The full suite covers Catalog search/filter/details/import, explicit generation modes and infeasibility, financial editing, named library operations, Listing Studio editing/preview/clipboard/JSON, persistence/recovery, stale-tab protections, selected contrast, keyboard focus and viewport bounds. It does not exercise paid OpenAI calls or production Vercel behavior. See the manual checklist above and DEPLOYMENT.md before launch.
+
+Remaining release steps: review the refreshed screenshots, confirm public GitHub visibility deliberately, approve/connect/deploy on Vercel in Demo Mode, record the actual URL and run the manual workflow against that deployment. A successful Git push is not a public-visibility or deployment claim. Remote CI results must be checked separately.
+
+Release documentation checks: `npm run format:check` passed. `git diff --check` initially reported Markdown hard-break spaces in README; replacing them with paragraph breaks removed the issue. A separate one-test Chromium capture run passed and refreshed all four PRD screenshots from the final interface; the temporary capture script was removed afterward. All four resulting screenshots were visually inspected.

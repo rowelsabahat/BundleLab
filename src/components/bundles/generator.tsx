@@ -33,7 +33,7 @@ import { ProductArt } from "../catalog/product-art";
 import { Button } from "../ui/button";
 import { BundleFinances } from "./bundle-finances";
 const sample =
-  "Create a skincare starter kit under $80 with at least a 35% gross margin.";
+  "Create a starter kit under $80 with at least a 35% gross margin.";
 export function Generator({
   mode,
   configured,
@@ -289,7 +289,7 @@ export function Generator({
               <input
                 value={theme}
                 maxLength={100}
-                placeholder="e.g. evening ritual"
+                placeholder="e.g. gift-ready collection"
                 onChange={(e) => {
                   changed();
                   setTheme(e.target.value);

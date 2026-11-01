@@ -1,55 +1,4 @@
-/* Reversible reference-inspired experiment. Original workspace rules stay in globals.css. */
-.editorial-wordmark,
-.editorial-spotlight {
-  display: none;
-}
-.design-preview-control {
-  margin-left: auto;
-}
-.design-preview-switch {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-.design-preview-switch legend {
-  float: left;
-  margin-right: 10px;
-  font-size: 11px;
-  color: var(--muted-foreground);
-}
-.design-preview-switch > div {
-  display: flex;
-  border: 1px solid var(--border);
-  background: var(--background);
-  padding: 3px;
-  border-radius: 6px;
-}
-.design-preview-switch button {
-  min-height: 36px;
-  padding: 7px 12px;
-  font-size: 12px;
-  line-height: 1.3;
-  border: 1px solid transparent;
-  border-radius: 3px;
-}
-.design-preview-switch button[aria-pressed="true"] {
-  background: var(--primary);
-  color: white;
-}
-.design-preview-notice {
-  max-width: 310px;
-  font-size: 11px;
-  line-height: 1.5;
-  color: var(--muted-foreground);
-  margin-top: 5px;
-}
-.top-header:has(.design-preview-control) {
-  height: auto;
-  min-height: 68px;
-  padding-block: 12px;
-  flex-wrap: wrap;
-}
+/* Permanent Editorial presentation, layered over shared workspace primitives. */
 
 body:has(.design-editorial) {
   --radius-panel: 0px;
@@ -134,13 +83,6 @@ body:has(.design-editorial) {
 .design-editorial .top-header .demo-badge {
   margin-left: auto;
   font-size: 11px;
-}
-.design-editorial .design-preview-control {
-  margin-left: 0;
-}
-.design-editorial .design-preview-switch > div,
-.design-editorial .design-preview-switch button {
-  border-radius: 0;
 }
 .design-editorial .page-content {
   width: 100%;
@@ -891,20 +833,6 @@ body:has(.design-editorial)
   }
 }
 @media (max-width: 767px) {
-  .top-header:has(.design-preview-control) {
-    min-height: 96px;
-    gap: 10px;
-  }
-  .design-preview-control {
-    width: 100%;
-    margin-left: 0;
-  }
-  .design-preview-switch {
-    justify-content: flex-end;
-  }
-  .design-preview-switch button {
-    min-height: 40px;
-  }
   .design-editorial .sidebar {
     padding: 18px 16px 0;
   }

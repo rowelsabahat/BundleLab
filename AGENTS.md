@@ -7,15 +7,21 @@ Read README.md and docs/PRD.md, ARCHITECTURE.md, DESIGN.md, and DECISIONS.md bef
 ## Hard boundaries
 
 - No Shopify APIs, authentication, payments, or external database.
-- Seed catalog: exactly 24 fictional skincare/wellness products, stable unique IDs, local JSON, explicit sample labels.
+- Seed catalog: exactly 24 fictional skincare/wellness products, stable unique IDs, local JSON, sample context documented without category-specific product positioning.
 - All financial calculations must be pure deterministic TypeScript using integer cents and validated inputs. Follow documented rounding and gross-profit assumptions; test edge cases. No money arithmetic in model responses.
 - All recommendations must reference canonical existing product IDs; validate schemas and domain constraints before accepting AI output.
 - OpenAI calls belong only in server-side routes/server-only modules. Never expose secrets, log keys, or use NEXT_PUBLIC_ for credentials. Keep recommendation Demo Mode explicit and simulated; AI Mode must call OpenAI and never silently fall back. Recommendations currently use only the server-owned seed catalog. Listing AI may curate only selected catalog fact IDs and approved style options; compile copy from verified source facts, never accept unconstrained model claims or financial output. Listing imports are validated merchant-provided catalog data and cannot override seed records.
 - Persist saved bundles only through versioned, validated localStorage; handle hydration, invalid data, and storage failure. Never trust stored totals. Preserve explicit discount/direct-price modes, working-draft autosave versus named saves, and stale-tab write protection. AI recommendations remain seed-only; the local editor/Listing Studio may use validated imports. Preserve listing autosave, tone-change non-destructive behavior, regeneration confirmation and context-review checks before export.
 
+## Release and publishing
+
+Editorial is the only shipped appearance. Do not restore the design-preview controls or read the deprecated appearance preference. Describe BundleLab as a tool for merchants across categories; keep sample product facts and categories accurate. Never erase browser data as part of a design change.
+
+Public release version is 1.0.0. Keep CHANGELOG.md and docs/QA.md honest about executed checks. Never commit secrets, generated build/test artifacts or node_modules. Demo must work without a key; mock paid services in automated checks. External deployment or remote Vercel settings require explicit user confirmation. Never force-push, rewrite shared history or overwrite remote changes.
+
 ## Implementation style
 
-Use npm and commit package-lock.json. Target Node 24 and strict TypeScript; avoid any and unexplained assertions. Prefer Zod-inferred types at trust boundaries. Keep server components by default; add client boundaries only for interaction/browser APIs. Use local React state/reducers before adding state libraries. Add components/modules when needed, not speculative layers. Follow semantic theme tokens and accessible shadcn primitives. Preserve original branding, responsive layouts, keyboard access, focus states, and honest error/empty states.
+Use npm and commit package-lock.json. Target Node 24 and strict TypeScript; avoid any and unexplained assertions. Prefer Zod-inferred types at trust boundaries. Keep server components by default; add client boundaries only for interaction/browser APIs. Use local React state/reducers before adding state libraries. Add components/modules when needed, not speculative layers. Follow semantic theme tokens and accessible shadcn primitives. Preserve the finalized Editorial design, original branding, responsive layouts, keyboard access, focus states, and honest error/empty states.
 
 ## Workflow and verification
 

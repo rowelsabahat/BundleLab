@@ -1,6 +1,6 @@
 # BundleLab product requirements
 
-Status: end-to-end portfolio MVP implemented; pre-launch QA is recorded in QA.md. Overview, catalog browsing/details, and validated browser-local CSV import are shipped. AI/Demo recommendations, deterministic bundle calculations, and a browser-local chosen-bundle editor are implemented. The full editor and saved-bundle library are implemented. Listing Studio generates grounded editable copy in AI or explicit Demo Mode, previews it and exports JSON/formatted text.
+Status: MVP v1.0.0, permanent Editorial presentation; pre-launch QA is recorded in QA.md. Overview, catalog browsing/details, and validated browser-local CSV import are shipped. AI/Demo recommendations, deterministic bundle calculations, and a browser-local chosen-bundle editor are implemented. The full editor and saved-bundle library are implemented. Listing Studio generates grounded editable copy in AI or explicit Demo Mode, previews it and exports JSON/formatted text.
 
 ## Problem and hypothesis
 
@@ -8,7 +8,7 @@ Small merchants may struggle to choose complementary products and understand the
 
 ## Target merchant persona
 
-An assumed owner-operator of a small skincare and wellness shop, maintaining a modest catalog and handling merchandising and marketing themselves. They need a clear view of cost and margin, with little setup time. This persona is fictional and has not been interviewed.
+An assumed owner-operator of a small e-commerce shop, maintaining a modest catalog and handling merchandising and marketing themselves. The skincare and wellness sample catalog illustrates the workflow; it does not define the intended merchant audience. They need a clear view of cost and margin, with little setup time. This persona is fictional and has not been interviewed.
 
 ## Journeys
 
@@ -33,6 +33,8 @@ Milestone addition: browser-local CSV import with a downloadable sample, atomic 
 ## Out of scope
 
 Shopify APIs or publishing, authentication, payments, external databases, multi-user sync, real sales analytics, medical advice, tax/shipping/payment-fee estimates, multi-currency, automated store/catalog synchronization, background jobs, and production-scale abuse prevention infrastructure.
+
+The final release has one consistent Editorial design across all pages; no design-preview labels or appearance tabs are exposed.
 
 ## MVP acceptance criteria
 

@@ -2,7 +2,7 @@
 
 ## Implemented milestone
 
-Next.js App Router serves `/` (Overview), `/catalog`, and functional bundle pages at `/bundle-generator` and `/bundle-editor`. `/listing-studio` completes the saved-bundle handoff, copy generation/editing, storefront preview, and exports. The root layout renders `AppShell`, with a persistent `CatalogProvider`. Server route components delegate interactive views to client components. Navigation uses Next Link and pathname-based active states. Mobile navigation becomes a horizontally scrollable bar.
+Next.js App Router serves `/` (Overview), `/catalog`, and functional bundle pages at `/bundle-generator` and `/bundle-editor`. `/listing-studio` completes the saved-bundle handoff, copy generation/editing, storefront preview, and exports. The root layout renders `AppShell`, with a persistent `CatalogProvider`. Server route components delegate interactive views to client components. Navigation uses Next Link and pathname-based active states. The permanent Editorial shell uses top navigation; all five destinations remain visible on mobile with compact labels.
 
 The 24-product JSON seed is parsed with Zod at module load. `schemas.ts` owns the strict Product schema and unique-ID list validator; the client provider restores separately stored imported products after mount. Product fields are integer cents, bounded stock, USD, tags, and a local artwork variant. Zero prices are allowed by the milestone request (overriding the initial proposed positive-price rule). Cost may exceed price; show the loss rather than reject valid merchant data. `calculations.ts` implements item gross margin and integer-cent bundle totals, with null margin for zero revenue. Recommendations require positive revenue.
 
@@ -116,8 +116,10 @@ See QA.md for executed checks and limitations. CI explicitly selects Demo Mode w
 
 `components/workspace-heading.tsx` supplies the reusable page heading and explicit mode badge to client views. It accepts display props/actions only. `globals.css` owns the semantic type/surface/control tokens and responsive shell/card/field rules; all five destinations remain visible below 1024px through short visual labels with unchanged full accessible link names. This visual layer does not alter product authority, financial calculations, AI generation or persistence contracts.
 
-## Reversible design comparison
+## Final Editorial presentation
 
-AppShell's useDesignPreview hook restores a literal editorial/original preference from `bundlelab:design-preview:v1` after hydration. Invalid values are ignored, storage errors do not block the in-memory switch, and preference writes never touch any business-data storage key. The shell keeps the same React child tree while changing its design class, preserving in-progress forms. DesignPreviewControl is available on every page. Both appearances reuse identical catalog, financial, generation, editor and listing logic.
+AppShell always renders the Editorial appearance. The experimental comparison component, controls and preference reads have been removed. A legacy `bundlelab:design-preview:v1` value is harmless and is left untouched; no business data is migrated or cleared. `layout.tsx` imports `globals.css` for shared primitives and `editorial.css` for the permanent composition. Git history preserves the previous designs without shipping a runtime switch.
 
-layout.tsx imports an additive editorial.css; globals.css remains the original visual implementation. New Overview wordmark/spotlight markup is hidden in Original mode. The spotlight uses the existing catalog product and detail interaction. No new API, external media/font service, financial calculation or catalog authority is introduced.
+## Release deployment
+
+Version 1.0.0 targets Vercel's standard Next.js preset and Node 24. Demo is the default and requires no API key. AI requires server-only `BUNDLELAB_MODE=ai` and `OPENAI_API_KEY`; `OPENAI_MODEL` is optional. No database, custom server or static export is required. See [DEPLOYMENT.md](DEPLOYMENT.md) for setup and the explicit deployment approval boundary. CI performs checks without a paid key; configuring CI does not establish that a remote run or deployment succeeded.

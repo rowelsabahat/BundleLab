@@ -133,3 +133,15 @@ Accepted, 2026-10-31, at the user's request. Preserve the current source at `3b6
 ## 033 — Translate the reference's composition into BundleLab's visual language
 
 Accepted, 2026-10-31. Borrow oversized typography, grid lines, product layering and a confident editorial layout; retain the existing forest/off-white/charcoal palette and local botanical artwork. Use a canonical product spotlight rather than the reference's portrait, jewelry or unverifiable awards. Carry the grid, flat surfaces, heading hierarchy and top navigation through all five pages and portalled dialogs. Test both reversal and the complete Demo workflow; paid AI behavior is unchanged.
+
+## 034 — Separate merchant positioning from the sample catalog
+
+Accepted, 2026-11-01, at the user’s request. General app descriptions address e-commerce merchants and their own products. The Overview introduction, collection framing, default Generator request and theme example are category-neutral. Product names, category filters, generated listings about selected products and import validation remain grounded in the skincare/wellness sample dataset. The default prompt no longer infers a skincare constraint, so the existing all-category search can consider the entire sample catalog. No schema, calculation or persistence contract is changed.
+
+## 035 — Ship Editorial as the sole release appearance
+
+Accepted, 2026-11-01. The owner selected Editorial for the final MVP. Supersede decision 032's runtime comparison: remove Design preview text, controls, hook and preference reads. Keep shared CSS foundations and permanent Editorial styling. Leave the deprecated browser preference untouched and ignore it so prior Original selections cannot restore the retired interface. Business storage and financial logic remain unchanged; Git history retains the source checkpoints. Add a cross-route regression for legacy preferences.
+
+## 036 — Version and document the portfolio release
+
+Accepted, 2026-11-01. Mark the package and lockfile 1.0.0 and license original project code under MIT, retaining dependency licenses. Include real Demo screenshots, reproducible CI, setup/deployment instructions and honest verification limits. Default public demos to key-free simulated mode. Deployment or remote Vercel settings require explicit owner approval; normal GitHub push is requested for this milestone, but must not overwrite remote work or silently trigger an unapproved existing deployment integration. No deployment URL is claimed until verified.
