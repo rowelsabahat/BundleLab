@@ -98,18 +98,6 @@ npm run test:e2e
 
 For a local production preview, run `npm run build` followed by `npm start`.
 
-## Deployment
-
-Use Vercel's Next.js preset, repository root, Node 24, `npm ci` and `npm run build`, with automatic output settings. No environment variables are needed for default Demo behavior; explicitly setting `BUNDLELAB_MODE=demo` is recommended. AI additionally needs a server-only key and optional model override. Follow [the GitHub/Vercel guide](docs/DEPLOYMENT.md). Deployment and remote project-setting changes require owner approval; no successful deployment URL is claimed here.
-
-## Known limitations
-
-- Portfolio prototype: no Shopify publishing/integration, authentication, payments, external database, cloud sync or real store analytics.
-- One USD currency; financial estimates exclude tax, shipping, payment fees, overhead and returns. Gross margin is undefined for zero revenue, and losses remain visible.
-- The sample dataset and import category enum cover skincare/wellness, although product positioning addresses merchants across categories. Server recommendations use the 24 seed products; validated imports work in the Editor/Studio.
-- Storage is browser-local, not a backup. Stale-tab guards are best-effort and do not provide transactional multi-user synchronization.
-- AI limits are instance-local, not distributed abuse protection or a global spending cap. A public paid AI deployment needs hosting controls and provider budget management. Merchant-edited copy still needs review.
-- Chromium automation does not prove Safari/Firefox, real touch hardware or full accessibility conformance. Live provider behavior and deployed hosting require separate verification.
 
 ## Project documentation
 
