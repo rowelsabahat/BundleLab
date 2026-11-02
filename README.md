@@ -98,7 +98,6 @@ npm run test:e2e
 
 For a local production preview, run `npm run build` followed by `npm start`.
 
-
 ## Project documentation
 
 - [Product requirements](docs/PRD.md)
