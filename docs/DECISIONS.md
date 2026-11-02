@@ -144,4 +144,8 @@ Accepted, 2026-11-01. The owner selected Editorial for the final MVP. Supersede 
 
 ## 036 — Version and document the portfolio release
 
-Accepted, 2026-11-01. Mark the package and lockfile 1.0.0 and license original project code under MIT, retaining dependency licenses. Include real Demo screenshots, reproducible CI, setup/deployment instructions and honest verification limits. Default public demos to key-free simulated mode. Deployment or remote Vercel settings require explicit owner approval; normal GitHub push is requested for this milestone, but must not overwrite remote work or silently trigger an unapproved existing deployment integration. No deployment URL is claimed until verified.
+Accepted, 2026-11-01. Mark the package and lockfile 1.0.0. The initial permissive licensing choice is superseded by decision 037; dependency licenses remain unchanged. Include real Demo screenshots, reproducible CI, setup/deployment instructions and honest verification limits. Default public demos to key-free simulated mode. Deployment or remote Vercel settings require explicit owner approval; normal GitHub push is requested for this milestone, but must not overwrite remote work or silently trigger an unapproved existing deployment integration. No deployment URL is claimed until verified.
+
+## 037 — Remove the project license at the owner’s request
+
+Accepted, 2026-11-01. Remove the root license file and current permissive-license references. Mark only the root package and lockfile metadata `UNLICENSED`; leave all third-party dependency license metadata intact. Do not rewrite or force-push Git history. No application behavior changes.

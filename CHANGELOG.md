@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Removed the project license at the owner’s request and marked the package UNLICENSED. Dependency licenses remain unchanged.
+
 ## 1.0.0 — 2026-11-01
 
 Initial end-to-end portfolio MVP release.
@@ -10,7 +14,7 @@ Initial end-to-end portfolio MVP release.
 - Bundle editing with products, quantities, discount/direct pricing, target warnings and a named local library.
 - Grounded listing generation, three tones, editable copy, live preview, clipboard and JSON export.
 - Versioned local persistence, error/recovery states, accessible dialogs and responsive layouts.
-- Unit/API and desktop/mobile Chromium workflow coverage, CI, MIT license and documented Vercel setup.
+- Unit/API and desktop/mobile Chromium workflow coverage, CI and documented Vercel setup.
 
 ### Limits
 

@@ -10,7 +10,9 @@ BundleLab is a portfolio MVP exploring how small e-commerce merchants can move f
 
 **Live demo:** Pending deployment — replace with the verified Vercel URL.
 
-**License:** [MIT](LICENSE). No customer research, production usage or revenue impact is claimed.
+No project license is granted in the current revision. Third-party dependencies retain their own licenses.
+
+No customer research, production usage or revenue impact is claimed.
 
 ## The problem
 

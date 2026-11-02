@@ -17,7 +17,7 @@ Recommendation requests send eligible seed metadata and merchant prompts to Open
 ## Connect the repository
 
 1. Review the release commit and successful local checks. Confirm the repository contains no local secrets or generated artifacts. Publish/push to the intended GitHub repository with normal Git operations; never force-push over remote work.
-2. In GitHub repository settings, confirm the intended visibility and MIT license. A successful push alone does not establish public visibility.
+2. In GitHub repository settings, confirm the intended visibility. The current revision does not grant a project license; dependency licenses remain unchanged. A successful push alone does not establish public visibility.
 3. After the owner's explicit deployment approval, sign into Vercel and choose Add New → Project. Connect the GitHub account and import BundleLab with the settings above. Select the intended production branch (`main`).
 4. Add environment values to the intended Production/Preview environments. Do not place a paid key in untrusted preview environments. Review plan limits and request protection.
 5. Review settings and deploy only after approval. Record the actual successful deployment URL; do not invent one from the project name.
